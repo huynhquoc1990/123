@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<title>ZENO IoT Gateway – Video</title>
+<title>QA-GAS IoT Gateway – Video</title>
 <style>
 :root{--bg:#060e1a;--panel:#0c1a2e;--line:#1d3350;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24;--red:#f87171;--text:#e8f1ff;--muted:#8fa7c6}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -72,6 +72,10 @@ canvas#bg{position:absolute;inset:0}
 .pillar .pi{width:110px;height:110px;margin:0 auto 22px;border-radius:30px;display:flex;align-items:center;justify-content:center;background:rgba(34,211,238,.1);border:1.5px solid rgba(34,211,238,.4)}
 .pillar .pt{font-size:36px;font-weight:800}
 .pillar .ps{font-size:24px;color:var(--muted);margin-top:8px}
+/* logo */
+.logo{background:#fff;border-radius:22px;display:inline-block;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.logo img{display:block}
+#wm{right:36px;top:30px;padding:6px 8px;border-radius:14px}
 #black{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
 </style>
 </head>
@@ -86,6 +90,7 @@ canvas#bg{position:absolute;inset:0}
   <section class="scene" id="s6"></section>
   <section class="scene" id="s7"></section>
   <section class="scene" id="s8"></section>
+  <div class="a logo" id="wm"><img src="assets/logo_qa.png" style="height:66px"></div>
   <div id="black"></div>
 </div>
 <script>
@@ -160,16 +165,17 @@ function drawBg(t){
 (()=>{const s=$('s1');
  const a=add(s,'<div class="a" id="h1a">Nhà máy của bạn đang tiêu thụ</div>');
  const b=add(s,'<div class="a" id="h1b">bao nhiêu điện — ngay lúc này?</div>');
+ const lg=add(s,'<div class="a logo" style="left:870px;top:120px;padding:10px 12px"><img src="assets/logo_qa.png" style="height:180px"></div>');
  const tag=add(s,'<div class="a ov" id="s1tag">Giải pháp IoT cho nhà máy thông minh</div>');
  const w=add(s,'<div class="a" id="s1words"><span style="color:var(--cyan)">Đo lường.</span><span style="color:var(--green)">Giám sát.</span><span style="color:var(--amber)">Điều khiển.</span></div>');
  w.style.opacity=1;const ws=[...w.children];
- UPD.s1=t=>{up(a,t,.3,{out:2.9});up(b,t,.9,{s0:.94,out:3.0});up(tag,t,3.5,{dy:20});ws.forEach((e,i)=>up(e,t,3.6+i*.35,{dy:60,s0:.8,ease:eob}))};
+ UPD.s1=t=>{up(lg,t,3.25,{dy:-30,s0:.7,ease:eob});up(a,t,.3,{out:2.9});up(b,t,.9,{s0:.94,out:3.0});up(tag,t,3.5,{dy:20});ws.forEach((e,i)=>up(e,t,3.6+i*.35,{dy:60,s0:.8,ease:eob}))};
 })();
 
 // ===================== S2 reveal =====================
 (()=>{const s=$('s2');
  const ph=add(s,'<div class="a" id="s2photo"><img src="assets/side_view.jpg"></div>');const img=ph.querySelector('img');
- const o=add(s,'<div class="a ov" style="left:980px;top:250px">ZENO PCB &nbsp;·&nbsp; Industrial IoT</div>');
+ const o=add(s,'<div class="a ov" style="left:980px;top:250px">QA-GAS &nbsp;·&nbsp; Industrial IoT</div>');
  const h=add(s,'<div class="a" style="left:975px;top:300px;font-size:116px;font-weight:800;letter-spacing:-.035em;line-height:1">IoT Gateway</div>');
  const h2=add(s,'<div class="a grad" style="left:978px;top:420px;font-size:116px;font-weight:800;letter-spacing:-.035em;line-height:1.05">ESP32-S3</div>');
  const p=add(s,'<div class="a muted" style="left:982px;top:575px;width:820px;font-size:34px;line-height:1.4">Bộ thu thập dữ liệu &amp; điều khiển công nghiệp — đưa mọi thiết bị trong nhà máy lên Cloud.</div>');
@@ -200,7 +206,7 @@ const T0=2.6,STEP=2.55,TR=.85,CX=600,CY=560;
  const svg=add(s,'<svg class="a" style="left:0;top:0;opacity:1" width="1920" height="1080"><line id="tl" stroke="#22d3ee" stroke-width="2" stroke-dasharray="6 6"/><circle id="tlc" r="6" fill="#22d3ee"/></svg>');
  const rings=[add(s,'<div class="ring"></div>'),add(s,'<div class="ring"></div>')];
  const hdr=add(s,'<div class="a ov" style="left:80px;top:60px">Khám phá phần cứng</div>');
- const cards=STOPS.map((S,k)=>add(s,`<div class="a tcard"><div class="idx">${k?String(k).padStart(2,'0')+' / '+(STOPS.length-1):'ZENO IoT GATEWAY'}</div><div class="tt">${S.t}</div><div class="dd">${S.d}</div><div>${S.tg.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`));
+ const cards=STOPS.map((S,k)=>add(s,`<div class="a tcard"><div class="idx">${k?String(k).padStart(2,'0')+' / '+(STOPS.length-1):'QA-GAS IoT GATEWAY'}</div><div class="tt">${S.t}</div><div class="dd">${S.d}</div><div>${S.tg.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`));
  const dots=add(s,'<div class="a" id="tourDots"></div>');dots.style.opacity=1;for(let i=1;i<STOPS.length;i++)add(dots,'<i></i>');
  const di=[...dots.children];const tl=$('tl'),tlc=$('tlc');
  UPD.s3=lt=>{
@@ -266,7 +272,7 @@ const T0=2.6,STEP=2.55,TR=.85,CX=600,CY=560;
  const at=(P,f)=>{const L=plen(P),d=f*L[L.length-1];for(let i=1;i<P.length;i++)if(d<=L[i]){const q=(d-L[i-1])/(L[i]-L[i-1]);return[lerp(P[i-1][0],P[i][0],q),lerp(P[i-1][1],P[i][1],q)]}return P[P.length-1]};
  const busL=add(s,'<div class="a pill" style="left:400px;top:800px;background:rgba(251,191,36,.12);color:#fbbf24;border:1.5px solid rgba(251,191,36,.5)">RS485 · Modbus RTU</div>');
  const gw=add(s,'<div class="a" style="left:548px;top:370px;width:252px;height:300px;border-radius:20px;overflow:hidden;border:2px solid rgba(34,211,238,.6);box-shadow:0 0 40px rgba(34,211,238,.35)"><img src="assets/board_crop.jpg" style="width:100%;height:100%;object-fit:cover"></div>');
- const gwl=add(s,'<div class="a" style="left:548px;top:684px;width:252px;text-align:center;font-size:22px;font-weight:800">ZENO Gateway</div>');
+ const gwl=add(s,'<div class="a" style="left:548px;top:684px;width:252px;text-align:center;font-size:22px;font-weight:800">QA-GAS Gateway</div>');
  const cl=add(s,`<div class="a" style="left:872px;top:452px;width:140px;height:136px;border-radius:50%;background:radial-gradient(circle,#123a52,#0b2032);border:2px solid rgba(34,211,238,.6);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#22d3ee">${icon('cloud',54,'#22d3ee')}<div style="font-size:18px;font-weight:800;color:#e8f1ff">Cloud</div></div>`);
  const clt=add(s,'<div class="a muted" style="left:812px;top:396px;width:260px;text-align:center;font-size:19px;font-weight:600">WiFi · Ethernet · 4G</div>');
  const clb=add(s,'<div class="a muted" style="left:812px;top:600px;width:260px;text-align:center;font-size:19px;font-weight:600">MQTT · HTTP</div>');
@@ -375,8 +381,8 @@ const T0=2.6,STEP=2.55,TR=.85,CX=600,CY=560;
  const h=add(s,'<div class="a h2" style="left:0;width:1920px;text-align:center;top:170px;font-size:76px">Biến dữ liệu thành <span style="color:var(--amber)">tiết kiệm</span></div>');
  const PL=[['leaf','#34d399','Tiết kiệm điện năng','Phát hiện lãng phí, tối ưu phụ tải'],['monitor','#22d3ee','Giám sát realtime','Mọi lúc, mọi nơi trên điện thoại'],['gauge','#fbbf24','Giảm dừng máy','Cảnh báo sớm, bảo trì kịp thời']]
   .map((p,i)=>add(s,`<div class="a pillar" style="left:${270+i*480}px;top:330px"><div class="pi" style="border-color:${p[1]}66;background:${p[1]}14">${icon(p[0],56,p[1])}</div><div class="pt">${p[2]}</div><div class="ps">${p[3]}</div></div>`));
- const brand=add(s,'<div class="a" style="left:0;width:1920px;top:690px;text-align:center"><div style="font-size:92px;font-weight:900;letter-spacing:.06em">ZENO<span class="grad"> PCB</span></div><div style="font-size:30px;color:#cfe2f7;margin-top:6px;font-weight:600">IoT Gateway ESP32-S3 · Thu thập dữ liệu &amp; Giám sát nhà máy</div></div>');
- const url=add(s,'<div class="a" style="left:0;width:1920px;top:900px;text-align:center"><span class="chip" style="font-size:30px;padding:14px 34px;border-color:#34d399;color:#34d399;background:rgba(52,211,153,.1)">zenopcb.vn &nbsp;·&nbsp; Liên hệ tư vấn giải pháp</span></div>');
+ const brand=add(s,'<div class="a" style="left:0;width:1920px;top:630px;text-align:center"><div style="display:inline-flex;align-items:center;gap:44px;text-align:left"><div class="logo" style="padding:12px 14px"><img src="assets/logo_qa.png" style="height:176px"></div><div><div style="font-size:104px;font-weight:900;letter-spacing:.02em;line-height:1">QA<span class="grad">-GAS</span></div><div style="font-size:30px;color:#cfe2f7;margin-top:14px;font-weight:600">IoT Gateway ESP32-S3<br>Thu thập dữ liệu &amp; Giám sát nhà máy</div></div></div></div>');
+ const url=add(s,'<div class="a" style="left:0;width:1920px;top:910px;text-align:center"><span class="chip" style="font-size:30px;padding:14px 34px;border-color:#34d399;color:#34d399;background:rgba(52,211,153,.1)">Liên hệ QA-GAS &nbsp;·&nbsp; Tư vấn giải pháp IoT cho nhà máy</span></div>');
  UPD.s8=t=>{bg.style.opacity=1;bg.style.transform=`scale(${1+.04*t/7})`;sh.style.opacity=1;
   up(h,t,.3,{dy:40});PL.forEach((p,i)=>up(p,t,.9+i*.2,{dy:50,s0:.9,ease:eob}));up(brand,t,2.4,{dy:40,s0:.95});up(url,t,3.0,{dy:30})};
 })();
@@ -389,6 +395,7 @@ window.render=t=>{
     el.style.display='block';
     const fi=a===0?1:clamp((t-a)/.4),fo=b>=window.DURATION?1:1-clamp((t-(b-.4))/.4);
     el.style.opacity=Math.min(fi,fo);UPD[id](t-a)}
+  {const w=$('wm');const o=clamp((t-6.6)/.5)*(1-clamp((t-74.4)/.5));w.style.opacity=o;w.style.transform=`translateY(${(1-o)*-10}px)`}
   $('black').style.opacity=clamp((t-(window.DURATION-.9))/.8)+ (1-clamp(t/.6));
 };
 window.READY=false;

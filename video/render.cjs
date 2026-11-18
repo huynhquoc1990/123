@@ -1,6 +1,6 @@
 // Render index.html frame-by-frame to MP4.
 // Usage:
-//   node render.cjs                      -> out/zeno_iot_gateway.mp4 (with music)
+//   node render.cjs                      -> out/qa_gas_iot_gateway.mp4 (with music)
 //   node render.cjs --stills 3,15,45     -> out/still_<t>.png previews
 const { chromium } = require('playwright');
 const { spawn, execFileSync } = require('child_process');
@@ -71,7 +71,7 @@ async function renderChunk(browser, f0, f1, file) {
 
   const music = path.join(OUT, 'music.wav');
   if (!fs.existsSync(music)) execFileSync('python3', [path.join(ROOT, 'music.py'), music, String(dur)], { stdio: 'inherit' });
-  const final = path.join(OUT, 'zeno_iot_gateway.mp4');
+  const final = path.join(OUT, 'qa_gas_iot_gateway.mp4');
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', silent, '-i', music, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k',
     '-shortest', '-movflags', '+faststart', final]);
   for (const p of [...parts, list, silent]) fs.unlinkSync(p);

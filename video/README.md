@@ -1,8 +1,8 @@
-# Video giới thiệu – ZENO IoT Gateway ESP32-S3
+# Video giới thiệu – QA-GAS IoT Gateway ESP32-S3
 
 Video 82 giây, Full HD 1920×1080, 30 fps, có nhạc nền (tự tổng hợp, không vướng bản quyền).
 
-**File video:** `out/zeno_iot_gateway.mp4`
+**File video:** `out/qa_gas_iot_gateway.mp4`
 
 ## Kịch bản
 | Thời gian | Cảnh |
@@ -14,13 +14,13 @@ Video 82 giây, Full HD 1920×1080, 30 fps, có nhạc nền (tự tổng hợp,
 | 41–55s | Ứng dụng 1: Thu thập dữ liệu điện năng (đồng hồ điện → RS485 → Gateway → Cloud → Dashboard) |
 | 55–68s | Ứng dụng 2: Giám sát IoT nhà máy (trạng thái máy, đếm sản lượng, cảnh báo, relay từ xa, OEE) |
 | 68–75s | Vỏ hộp DIN-rail |
-| 75–82s | Lợi ích + thương hiệu ZENO PCB / zenopcb.vn |
+| 75–82s | Lợi ích + logo & thương hiệu QA-GAS (Quốc Anh) |
 
 ## Chỉnh sửa & render lại
 - Nội dung, chữ, thời lượng từng cảnh: sửa trong `index.html` (mảng `SCENES`, `STOPS`, và từng khối `S1`…`S8`).
 - Nhạc nền: `music.py`.
 - Render (cần Node + Playwright + ffmpeg + Python/numpy):
   ```bash
-  node render.cjs                    # render video đầy đủ -> out/zeno_iot_gateway.mp4
+  node render.cjs                    # render video đầy đủ -> out/qa_gas_iot_gateway.mp4
   node render.cjs --stills 5,20,45   # xuất ảnh xem trước tại các giây chỉ định
   ```
