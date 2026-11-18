@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>ZENO IoT Gateway – Video</title>
+<style>
+:root{--bg:#060e1a;--panel:#0c1a2e;--line:#1d3350;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24;--red:#f87171;--text:#e8f1ff;--muted:#8fa7c6}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
+canvas#bg{position:absolute;inset:0}
+.scene{position:absolute;inset:0;opacity:0;display:none}
+.a{position:absolute;will-change:transform,opacity}
+.ov{font-size:22px;letter-spacing:.3em;font-weight:700;color:var(--cyan);text-transform:uppercase}
+.h2{font-size:62px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.muted{color:var(--muted)}
+.grad{background:linear-gradient(90deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border:1.5px solid rgba(34,211,238,.45);border-radius:999px;font-size:24px;font-weight:600;color:#cfefff;background:rgba(34,211,238,.08);margin:0 10px 12px 0}
+.cardbox{background:linear-gradient(160deg,rgba(18,36,62,.92),rgba(9,20,36,.92));border:1.5px solid var(--line);border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.dot{display:inline-block;width:14px;height:14px;border-radius:50%}
+/* S1 */
+#h1a{top:360px;left:0;width:1920px;text-align:center;font-size:62px;font-weight:600}
+#h1b{top:450px;left:0;width:1920px;text-align:center;font-size:96px;font-weight:800;color:var(--amber);letter-spacing:-.02em}
+#s1tag{top:360px;left:0;width:1920px;text-align:center}
+#s1words{top:430px;left:0;width:1920px;text-align:center;font-size:118px;font-weight:800;letter-spacing:-.03em}
+#s1words span{display:inline-block;margin:0 28px}
+/* S2 */
+#s2photo{left:0;top:0;width:900px;height:1080px;overflow:hidden}
+#s2photo img{position:absolute;left:0;top:0;width:1500px;height:2000px;transform-origin:0 0}
+#s2photo:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,26,0) 55%,var(--bg) 100%),linear-gradient(0deg,rgba(6,14,26,.5),rgba(6,14,26,0) 30%)}
+/* S3 */
+#tourImg{position:absolute;left:0;top:0;width:1500px;height:2000px;transform-origin:0 0}
+#tourSpot{position:absolute;inset:0}
+#tourFade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,26,0) 50%,rgba(6,14,26,.88) 60%,var(--bg) 70%),linear-gradient(180deg,rgba(6,14,26,.75),rgba(6,14,26,0) 18%)}
+.ring{position:absolute;border-radius:50%;border:3px solid var(--cyan);box-shadow:0 0 28px rgba(34,211,238,.7),inset 0 0 22px rgba(34,211,238,.35)}
+.ring:after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1.5px dashed rgba(34,211,238,.6)}
+.tcard{left:1220px;top:290px;width:620px}
+.tcard .idx{font-family:'DejaVu Sans Mono',monospace;font-size:24px;color:var(--cyan);letter-spacing:.1em;margin-bottom:18px}
+.tcard .tt{font-size:58px;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:24px}
+.tcard .dd{font-size:29px;line-height:1.45;color:#b7c9e2;margin-bottom:28px}
+#tourDots{left:1220px;top:860px}
+#tourDots i{display:inline-block;width:12px;height:12px;border-radius:6px;background:#2a4565;margin-right:10px}
+/* S4 */
+.tile{width:400px;height:250px;padding:34px 34px}
+.tile .tl{font-size:36px;font-weight:800;margin-top:22px}
+.tile .ts{font-size:24px;color:var(--muted);margin-top:8px}
+/* S5 */
+.meter{width:320px;height:160px;padding:18px 20px}
+.lcd{background:#0b2a22;border:1.5px solid #1f5a49;border-radius:10px;padding:10px 14px;font-family:'DejaVu Sans Mono',monospace;color:#7dffc8;font-size:22px;line-height:1.35;margin-top:10px}
+.pill{padding:8px 18px;border-radius:999px;font-size:20px;font-weight:700;white-space:nowrap}
+.kpi{width:228px;height:128px;padding:16px 18px;background:rgba(255,255,255,.03);border:1.5px solid var(--line);border-radius:16px}
+.kpi .kl{font-size:19px;color:var(--muted)}
+.kpi .kv{font-size:40px;font-weight:800;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi .ku{font-size:20px;color:var(--muted);font-weight:600;margin-left:6px}
+/* S6 */
+.mach{width:450px;height:270px;padding:24px 26px}
+.mach .mn{font-size:30px;font-weight:800}
+.mach .ms{font-size:20px;color:var(--muted);margin-top:2px}
+.stat{white-space:nowrap;display:inline-flex;align-items:center;gap:10px;font-size:21px;font-weight:700;padding:7px 16px;border-radius:999px}
+.mach .row{display:flex;justify-content:space-between;margin-top:20px}
+.mach .lb{font-size:19px;color:var(--muted)}
+.mach .vl{font-size:40px;font-weight:800;font-variant-numeric:tabular-nums}
+.toggle{width:84px;height:44px;border-radius:22px;background:#24364f;position:relative}
+.toggle i{position:absolute;top:5px;left:5px;width:34px;height:34px;border-radius:50%;background:#cfd8e6}
+/* S7 */
+.pcard{width:340px;height:560px;border-radius:22px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.08)}
+.pcard img{width:100%;height:100%;object-fit:cover}
+.bul{display:flex;align-items:center;gap:18px;font-size:31px;margin-bottom:26px;color:#d4e3f7}
+/* S8 */
+#s8bg{left:-40px;top:-60px;width:2000px;height:1200px;object-fit:cover}
+.pillar{width:440px;text-align:center}
+.pillar .pi{width:110px;height:110px;margin:0 auto 22px;border-radius:30px;display:flex;align-items:center;justify-content:center;background:rgba(34,211,238,.1);border:1.5px solid rgba(34,211,238,.4)}
+.pillar .pt{font-size:36px;font-weight:800}
+.pillar .ps{font-size:24px;color:var(--muted);margin-top:8px}
+#black{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="bg" width="1920" height="1080"></canvas>
+  <section class="scene" id="s1"></section>
+  <section class="scene" id="s2"></section>
+  <section class="scene" id="s3"></section>
+  <section class="scene" id="s4"></section>
+  <section class="scene" id="s5"></section>
+  <section class="scene" id="s6"></section>
+  <section class="scene" id="s7"></section>
+  <section class="scene" id="s8"></section>
+  <div id="black"></div>
+</div>
+<script>
+// ===================== helpers =====================
+const $=id=>document.getElementById(id);
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,p)=>a+(b-a)*p;
+const eo=p=>1-Math.pow(1-p,3);
+const eob=p=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
+const eio=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+const prog=(t,s,d)=>clamp((t-s)/d);
+function st(el,o,x=0,y=0,s=1,r=0){el.style.opacity=o.toFixed(3);el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${s.toFixed(4)}) rotate(${r}deg)`}
+// enter at a (fade+slide), optional exit at out
+function up(el,t,a,o={}){const d=o.d??.7,dy=o.dy??36,dx=o.dx??0,s0=o.s0??1,out=o.out??1e9,od=o.od??.4,oy=o.oy??-24,ease=o.ease??eo;
+  const pi=ease(prog(t,a,d)),po=eio(prog(t,out,od));st(el,clamp(prog(t,a,d)*1.4)*(1-po),dx*(1-pi),dy*(1-pi)+oy*po,lerp(s0,1,pi),o.r??0)}
+function cam(el,fx,fy,s,cx,cy){el.style.transform=`translate(${(cx-fx*s).toFixed(1)}px,${(cy-fy*s).toFixed(1)}px) scale(${s.toFixed(4)})`}
+const fmt=(v,d=1)=>v.toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d});
+function add(parent,html){parent.insertAdjacentHTML('beforeend',html);return parent.lastElementChild}
+const IC={
+chip:'<rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M9.5 3v4M14.5 3v4M9.5 17v4M14.5 17v4M3 9.5h4M3 14.5h4M17 9.5h4M17 14.5h4"/>',
+wifi:'<path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1"/>',
+lan:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 19v-5h8v5M7 9h10"/>',
+bus:'<path d="M2 12h20"/><rect x="4" y="4" width="4" height="4" rx="1"/><rect x="10" y="4" width="4" height="4" rx="1"/><rect x="16" y="4" width="4" height="4" rx="1"/><path d="M6 8v4M12 8v4M18 8v4M12 12v6"/><circle cx="12" cy="19" r="1.5"/>',
+input:'<path d="M2 12h11M9 8l4 4-4 4"/><rect x="15" y="4" width="6" height="16" rx="1.5"/>',
+relay:'<path d="M3 17h4M17 17h4M8.5 17l7-6"/><circle cx="8" cy="17" r="1.6"/><circle cx="16" cy="17" r="1.6"/><path d="M12 3v5M10 5h4"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+sd:'<path d="M7 3h8l4 4v14H7z"/><path d="M10 3v4M13 3v4M16 5v2"/>',
+din:'<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M2 12h4M18 12h4M9 7h6"/>',
+bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+monitor:'<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4M6 12l3-3 3 2 5-5"/>',
+bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+cloud:'<path d="M7 18a5 5 0 0 1-.6-9.96A6.5 6.5 0 0 1 18.5 9.5 4.3 4.3 0 0 1 17.5 18z"/>',
+leaf:'<path d="M5 20c0-10 6-15 15-15 0 9-5.5 15-14 15"/><path d="M5 20 13 12"/>',
+gauge:'<path d="M3.5 17a8.5 8.5 0 1 1 17 0"/><path d="M12 17l4.5-5.5"/><circle cx="12" cy="17" r="1.3"/>',
+meter:'<rect x="4" y="3" width="16" height="18" rx="2"/><rect x="7" y="6" width="10" height="5" rx="1"/><path d="M8 15h2M14 15h2M8 18h8"/>',
+factory:'<path d="M3 21V10l5 3v-3l5 3v-3l5 3V4h3v17z"/><path d="M7 17h2M12 17h2"/>',
+shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+tool:'<path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3z"/><path d="M14.5 6.5 17 4l3 3-2.5 2.5"/>',
+count:'<path d="M4 6h16M4 12h10M4 18h6"/><path d="M17 15v6M14 18h6"/>',
+usb:'<rect x="5" y="8" width="14" height="8" rx="4"/><path d="M9 12h6"/>',
+signal:'<path d="M5 20v-3M9.5 20v-6M14 20v-9M18.5 20V5"/>'
+};
+const icon=(n,sz=48,c='currentColor',w=1.7)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+
+// ===================== timeline =====================
+const SCENES=[['s1',0,6.2],['s2',5.8,12.3],['s3',11.9,35.3],['s4',34.9,41.3],['s5',40.9,55.3],['s6',54.9,68.3],['s7',67.9,75.3],['s8',74.9,82]];
+window.DURATION=82;
+const UPD={};
+
+// ===================== background canvas =====================
+const cv=$('bg'),cx=cv.getContext('2d');
+const PARTS=[...Array(60)].map((_,i)=>({x:(i*397.3)%1920,y:(i*613.7)%1080,v:8+(i*7)%23,r:1+(i%3)*.7,ph:i*1.7}));
+function drawBg(t){
+  cx.fillStyle='#060e1a';cx.fillRect(0,0,1920,1080);
+  const g1=cx.createRadialGradient(400+200*Math.sin(t*.13),300+120*Math.cos(t*.11),0,400,300,900);
+  g1.addColorStop(0,'rgba(34,211,238,0.13)');g1.addColorStop(1,'rgba(34,211,238,0)');cx.fillStyle=g1;cx.fillRect(0,0,1920,1080);
+  const g2=cx.createRadialGradient(1550+150*Math.cos(t*.09),850+100*Math.sin(t*.15),0,1550,850,900);
+  g2.addColorStop(0,'rgba(52,211,153,0.10)');g2.addColorStop(1,'rgba(52,211,153,0)');cx.fillStyle=g2;cx.fillRect(0,0,1920,1080);
+  cx.strokeStyle='rgba(120,170,230,0.06)';cx.lineWidth=1;const off=(t*12)%60;
+  cx.beginPath();for(let x=-60+off;x<1920;x+=60){cx.moveTo(x,0);cx.lineTo(x,1080)}for(let y=-60+off;y<1080;y+=60){cx.moveTo(0,y);cx.lineTo(1920,y)}cx.stroke();
+  for(const p of PARTS){const y=(p.y-t*p.v+1080*10)%1080;const a=.25+.25*Math.sin(t*1.3+p.ph);cx.fillStyle=`rgba(140,220,255,${a})`;cx.beginPath();cx.arc(p.x,y,p.r,0,7);cx.fill()}
+  // intro waveform
+  if(t<6.4){const a=clamp(t/1)*(1-clamp((t-5.6)/.6));
+    for(let k=0;k<3;k++){cx.beginPath();const col=['34,211,238','52,211,153','251,191,36'][k];
+      cx.strokeStyle=`rgba(${col},${.55*a})`;cx.lineWidth=2.5;cx.shadowColor=`rgba(${col},.8)`;cx.shadowBlur=14;
+      const drawTo=1920*eo(clamp(t/2.2));
+      for(let x=0;x<=drawTo;x+=6){const y=800+60*Math.sin(x/1920*Math.PI*6+t*2.4+k*2.094)*Math.sin(Math.PI*x/1920);x?cx.lineTo(x,y):cx.moveTo(x,y)}cx.stroke()}
+    cx.shadowBlur=0}
+}
+
+// ===================== S1 intro =====================
+(()=>{const s=$('s1');
+ const a=add(s,'<div class="a" id="h1a">Nhà máy của bạn đang tiêu thụ</div>');
+ const b=add(s,'<div class="a" id="h1b">bao nhiêu điện — ngay lúc này?</div>');
+ const tag=add(s,'<div class="a ov" id="s1tag">Giải pháp IoT cho nhà máy thông minh</div>');
+ const w=add(s,'<div class="a" id="s1words"><span style="color:var(--cyan)">Đo lường.</span><span style="color:var(--green)">Giám sát.</span><span style="color:var(--amber)">Điều khiển.</span></div>');
+ w.style.opacity=1;const ws=[...w.children];
+ UPD.s1=t=>{up(a,t,.3,{out:2.9});up(b,t,.9,{s0:.94,out:3.0});up(tag,t,3.5,{dy:20});ws.forEach((e,i)=>up(e,t,3.6+i*.35,{dy:60,s0:.8,ease:eob}))};
+})();
+
+// ===================== S2 reveal =====================
+(()=>{const s=$('s2');
+ const ph=add(s,'<div class="a" id="s2photo"><img src="assets/side_view.jpg"></div>');const img=ph.querySelector('img');
+ const o=add(s,'<div class="a ov" style="left:980px;top:250px">ZENO PCB &nbsp;·&nbsp; Industrial IoT</div>');
+ const h=add(s,'<div class="a" style="left:975px;top:300px;font-size:116px;font-weight:800;letter-spacing:-.035em;line-height:1">IoT Gateway</div>');
+ const h2=add(s,'<div class="a grad" style="left:978px;top:420px;font-size:116px;font-weight:800;letter-spacing:-.035em;line-height:1.05">ESP32-S3</div>');
+ const p=add(s,'<div class="a muted" style="left:982px;top:575px;width:820px;font-size:34px;line-height:1.4">Bộ thu thập dữ liệu &amp; điều khiển công nghiệp — đưa mọi thiết bị trong nhà máy lên Cloud.</div>');
+ const chips=add(s,'<div class="a" style="left:982px;top:730px;width:880px"></div>');chips.style.opacity=1;
+ ['WiFi + BLE','Ethernet','RS485 Modbus','4 DI','4 Relay','RTC','MicroSD'].forEach(c=>add(chips,`<span class="chip">${c}</span>`));
+ const cs=[...chips.children];
+ UPD.s2=t=>{st(ph,clamp(t/.8),lerp(-60,0,eo(clamp(t/1.2))));cam(img,790,1000,lerp(.86,.97,t/6.5),450,560);
+  up(o,t,.4,{dx:-30,dy:0});up(h,t,.6,{dy:50});up(h2,t,.85,{dy:50});up(p,t,1.3);cs.forEach((c,i)=>up(c,t,1.9+i*.12,{dy:20,s0:.85}))};
+})();
+
+// ===================== S3 hardware tour =====================
+const STOPS=[
+ {f:[790,1180],s:.8,rings:[],i:'Tổng quan',t:'Một bo mạch,<br>đủ mọi kết nối',d:'Thiết kế gọn trong vỏ DIN-rail, tích hợp sẵn mọi cổng cần thiết để thu thập dữ liệu &amp; điều khiển tại hiện trường.',tg:['All-in-one','Lắp tủ điện']},
+ {f:[600,1050],s:2.0,rings:[[640,1135,150],[420,862,55]],t:'ESP32-S3 +<br>Anten ngoài',d:'Vi xử lý lõi kép 240 MHz, WiFi 2.4 GHz &amp; Bluetooth LE. Anten SMA rời giúp sóng ổn định cả trong tủ điện kim loại.',tg:['WiFi','BLE','Dual-core']},
+ {f:[800,960],s:2.4,rings:[[795,940,140]],t:'Cổng Ethernet<br>RJ45',d:'Kết nối mạng LAN có dây — ổn định, ít nhiễu, phù hợp hạ tầng mạng của nhà máy.',tg:['LAN','Có dây']},
+ {f:[520,1590],s:2.4,rings:[[570,1612,105]],t:'RS485 –<br>Modbus RTU',d:'Đấu nối đồng hồ điện đa năng, biến tần, PLC, cảm biến… nhiều thiết bị trên cùng một bus, khoảng cách tới 1.200 m.',tg:['A+ / B- / G','Multi-drop']},
+ {f:[990,860],s:2.2,rings:[[992,830,190]],t:'4 ngõ vào số<br>cách ly quang',d:'IN1–IN4 + COM: đọc trạng thái chạy/dừng của máy, đếm sản phẩm, tín hiệu cảm biến, nút nhấn.',tg:['IN1–IN4','Opto']},
+ {f:[860,1530],s:1.55,rings:[[862,1470,270]],t:'4 Relay 10A<br>có chống xung',d:'Relay HF32F 10A/250VAC kèm varistor bảo vệ — bật/tắt tải, còi đèn báo, contactor từ xa.',tg:['10A 250VAC','Varistor']},
+ {f:[1130,1430],s:2.0,rings:[[1150,1250,110],[1120,1612,110]],t:'RTC &amp;<br>thẻ MicroSD',d:'Đồng hồ thời gian thực dùng pin CR1220, lưu dữ liệu vào thẻ nhớ — không mất dữ liệu khi rớt mạng.',tg:['Timestamp','Data logging']},
+ {f:[470,1480],s:1.9,rings:[[382,1402,85],[455,1612,85]],t:'Nguồn DC<br>công nghiệp &amp; USB-C',d:'Ngõ vào VIN với mạch lọc nguồn, tụ 470 µF/35 V. Cổng USB-C để nạp firmware &amp; cấu hình nhanh.',tg:['VIN DC','USB-C']},
+ {f:[1080,930],s:2.2,rings:[[1150,920,85]],t:'Sẵn sàng<br>mở rộng 4G LTE',d:'Vị trí mở rộng module LTE cho công trình không có Internet cố định hoặc cần đường truyền dự phòng.',tg:['LTE','Dự phòng']}
+];
+const T0=2.6,STEP=2.55,TR=.85,CX=600,CY=560;
+(()=>{const s=$('s3');
+ const img=add(s,'<img id="tourImg" src="assets/board_top.jpg">');
+ const spot=add(s,'<div id="tourSpot"></div>');
+ const fade=add(s,'<div id="tourFade"></div>');
+ const svg=add(s,'<svg class="a" style="left:0;top:0;opacity:1" width="1920" height="1080"><line id="tl" stroke="#22d3ee" stroke-width="2" stroke-dasharray="6 6"/><circle id="tlc" r="6" fill="#22d3ee"/></svg>');
+ const rings=[add(s,'<div class="ring"></div>'),add(s,'<div class="ring"></div>')];
+ const hdr=add(s,'<div class="a ov" style="left:80px;top:60px">Khám phá phần cứng</div>');
+ const cards=STOPS.map((S,k)=>add(s,`<div class="a tcard"><div class="idx">${k?String(k).padStart(2,'0')+' / '+(STOPS.length-1):'ZENO IoT GATEWAY'}</div><div class="tt">${S.t}</div><div class="dd">${S.d}</div><div>${S.tg.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`));
+ const dots=add(s,'<div class="a" id="tourDots"></div>');dots.style.opacity=1;for(let i=1;i<STOPS.length;i++)add(dots,'<i></i>');
+ const di=[...dots.children];const tl=$('tl'),tlc=$('tlc');
+ UPD.s3=lt=>{
+  let k=0;for(let i=1;i<STOPS.length;i++)if(lt>=T0+(i-1)*STEP)k=i;
+  const ts=k?T0+(k-1)*STEP:0,p=k?eio(clamp((lt-ts)/TR)):1,A=STOPS[k?k-1:0],B=STOPS[k];
+  let fx=lerp(A.f[0],B.f[0],p),fy=lerp(A.f[1],B.f[1],p),sc=Math.exp(lerp(Math.log(A.s),Math.log(B.s),p));
+  if(!k)sc=.8*lerp(.9,1,eo(clamp(lt/2.4)));
+  // zoom-out bump mid-transition
+  if(k&&p<1)sc*=1-.18*Math.sin(Math.PI*p);
+  cam(img,fx,fy,sc,CX,CY);
+  const next=k<STOPS.length-1?T0+k*STEP:1e9;
+  const ro=k?clamp((lt-ts-TR)/.3)*(1-clamp((lt-(next-.22))/.22)):0;
+  let ax=0,ay=0,R=0;
+  rings.forEach((r,i)=>{const R0=B.rings[i];if(!R0||ro<=0){r.style.opacity=0;return}
+    const x=CX+(R0[0]-fx)*sc,y=CY+(R0[1]-fy)*sc,rr=R0[2]*(1+.05*Math.sin(lt*5));
+    r.style.left=(x-rr)+'px';r.style.top=(y-rr)+'px';r.style.width=r.style.height=2*rr+'px';r.style.opacity=ro;r.style.transform=`scale(${lerp(1.4,1,eo(ro))})`;
+    if(!i){ax=x;ay=y;R=R0[2]}});
+  // spotlight
+  if(ro>0){const pts=B.rings.map(R0=>[CX+(R0[0]-fx)*sc,CY+(R0[1]-fy)*sc,R0[2]]);
+    const mx=pts.reduce((a,q)=>a+q[0],0)/pts.length,my=pts.reduce((a,q)=>a+q[1],0)/pts.length;
+    const rad=Math.max(...pts.map(q=>Math.hypot(q[0]-mx,q[1]-my)+q[2]))+40;
+    spot.style.background=`radial-gradient(circle at ${mx}px ${my}px, rgba(6,14,26,0) ${rad}px, rgba(6,14,26,.62) ${rad+120}px)`;spot.style.opacity=ro}
+  else spot.style.opacity=0;
+  // connector line
+  if(ro>0){const sx=ax+R*.72,sy=ay-R*.72,ex=1195,ey=330;const lp=eo(clamp((lt-ts-TR)/.5));
+    tl.setAttribute('x1',sx);tl.setAttribute('y1',sy);tl.setAttribute('x2',lerp(sx,ex,lp));tl.setAttribute('y2',lerp(sy,ey,lp));tl.style.opacity=ro;tlc.setAttribute('cx',lerp(sx,ex,lp));tlc.setAttribute('cy',lerp(sy,ey,lp));tlc.style.opacity=ro}
+  else{tl.style.opacity=0;tlc.style.opacity=0}
+  up(hdr,lt,.3,{dy:-20,dx:0});
+  cards.forEach((c,i)=>{const a=i?T0+(i-1)*STEP+TR*.55:.5,o=i<STOPS.length-1?T0+i*STEP:1e9;
+    if(lt<a-.1||lt>o+.5){c.style.opacity=0;return}up(c,lt,a,{dx:50,dy:0,out:o-.05,od:.35,oy:0})});
+  dots.style.opacity=clamp((lt-T0)/.5);di.forEach((d,i)=>{const on=i+1===k;d.style.width=on?'40px':'12px';d.style.background=on?'#22d3ee':(i+1<k?'#3f6d93':'#2a4565')});
+ };
+})();
+
+// ===================== S4 specs =====================
+(()=>{const s=$('s4');
+ const o=add(s,'<div class="a ov" style="left:0;width:1920px;text-align:center;top:120px">Thông số nổi bật</div>');
+ const h=add(s,'<div class="a h2" style="left:0;width:1920px;text-align:center;top:160px">Mạnh mẽ · Linh hoạt · <span class="grad">Bền bỉ</span></div>');
+ const T=[['chip','ESP32-S3','Lõi kép 240 MHz'],['wifi','WiFi + BLE','Anten ngoài SMA'],['lan','Ethernet','Cổng RJ45 LAN'],['bus','RS485','Modbus RTU'],
+  ['input','4 Ngõ vào số','Cách ly quang'],['relay','4 Relay','10A / 250VAC'],['sd','RTC + MicroSD','Lưu dữ liệu offline'],['din','Vỏ DIN-rail','Lắp tủ điện']];
+ const tiles=T.map((x,i)=>{const c=i%4,r=(i/4)|0;const col=['#22d3ee','#34d399','#fbbf24','#22d3ee'][(c+r)%4];
+  return add(s,`<div class="a cardbox tile" style="left:${115+c*430}px;top:${330+r*290}px"><div style="color:${col}">${icon(x[0],64,col,1.6)}</div><div class="tl">${x[1]}</div><div class="ts">${x[2]}</div></div>`)});
+ UPD.s4=t=>{up(o,t,.2,{dy:-20});up(h,t,.35,{dy:30});tiles.forEach((e,i)=>up(e,t,.7+i*.11,{dy:50,s0:.88,ease:eob}))};
+})();
+
+// ===================== S5 energy =====================
+(()=>{const s=$('s5');
+ const o=add(s,'<div class="a ov" style="left:110px;top:66px">Ứng dụng 01</div>');
+ const h=add(s,'<div class="a h2" style="left:110px;top:104px">Thu thập dữ liệu <span style="color:var(--amber)">điện năng</span></div>');
+ const svg=add(s,'<svg class="a" style="left:0;top:0;opacity:1" width="1920" height="1080"></svg>');
+ const NS='http://www.w3.org/2000/svg';const mk=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e};
+ const MY=[250,440,630];
+ const meters=MY.map((y,i)=>add(s,`<div class="a cardbox meter" style="left:110px;top:${y}px"><div style="display:flex;align-items:center;gap:10px;font-size:21px;font-weight:700;white-space:nowrap">${icon('meter',30,'#fbbf24')}Đồng hồ #${i+1} <span class="muted" style="font-weight:500">· Xưởng ${'ABC'[i]}</span></div><div class="lcd"></div></div>`));
+ const lcds=meters.map(m=>m.querySelector('.lcd'));
+ const paths=MY.map(y=>[[430,y+80],[480,y+80],[480,520],[548,520]]);
+ const up1=[[800,520],[1085,520]];
+ const lines=[...paths,up1].map((P,i)=>mk('polyline',{points:P.map(q=>q.join(',')).join(' '),fill:'none',stroke:i<3?'#fbbf24':'#22d3ee','stroke-width':3,'stroke-opacity':.55,'stroke-linejoin':'round'}));
+ lines.forEach(l=>{const L=l.getTotalLength();l.style.strokeDasharray=L;l.dataset.L=L});
+ const pk=[];for(let i=0;i<3;i++)for(let j=0;j<3;j++)pk.push({path:paths[i],c:'#fbbf24',ph:j/3+i*.11,sp:.45});
+ for(let j=0;j<5;j++)pk.push({path:up1,c:'#22d3ee',ph:j/5,sp:.6});
+ pk.forEach(p=>p.el=mk('circle',{r:6,fill:p.c,style:`filter:drop-shadow(0 0 6px ${p.c})`}));
+ const plen=P=>{let L=[0];for(let i=1;i<P.length;i++)L.push(L[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));return L};
+ const at=(P,f)=>{const L=plen(P),d=f*L[L.length-1];for(let i=1;i<P.length;i++)if(d<=L[i]){const q=(d-L[i-1])/(L[i]-L[i-1]);return[lerp(P[i-1][0],P[i][0],q),lerp(P[i-1][1],P[i][1],q)]}return P[P.length-1]};
+ const busL=add(s,'<div class="a pill" style="left:400px;top:800px;background:rgba(251,191,36,.12);color:#fbbf24;border:1.5px solid rgba(251,191,36,.5)">RS485 · Modbus RTU</div>');
+ const gw=add(s,'<div class="a" style="left:548px;top:370px;width:252px;height:300px;border-radius:20px;overflow:hidden;border:2px solid rgba(34,211,238,.6);box-shadow:0 0 40px rgba(34,211,238,.35)"><img src="assets/board_crop.jpg" style="width:100%;height:100%;object-fit:cover"></div>');
+ const gwl=add(s,'<div class="a" style="left:548px;top:684px;width:252px;text-align:center;font-size:22px;font-weight:800">ZENO Gateway</div>');
+ const cl=add(s,`<div class="a" style="left:872px;top:452px;width:140px;height:136px;border-radius:50%;background:radial-gradient(circle,#123a52,#0b2032);border:2px solid rgba(34,211,238,.6);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#22d3ee">${icon('cloud',54,'#22d3ee')}<div style="font-size:18px;font-weight:800;color:#e8f1ff">Cloud</div></div>`);
+ const clt=add(s,'<div class="a muted" style="left:812px;top:396px;width:260px;text-align:center;font-size:19px;font-weight:600">WiFi · Ethernet · 4G</div>');
+ const clb=add(s,'<div class="a muted" style="left:812px;top:600px;width:260px;text-align:center;font-size:19px;font-weight:600">MQTT · HTTP</div>');
+ const cap=add(s,'<div class="a muted" style="left:110px;top:880px;width:930px;font-size:26px;line-height:1.45">Đọc <b style="color:#e8f1ff">U, I, P, kWh, cos φ</b> từ đồng hồ điện đa năng qua Modbus RTU, gửi lên Cloud theo thời gian thực.</div>');
+ // dashboard
+ const db=add(s,'<div class="a cardbox" style="left:1100px;top:200px;width:740px;height:740px;padding:28px 30px"></div>');
+ db.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:12px;font-size:24px;font-weight:800"><span class="dot" id="live" style="background:#f87171"></span>Năng lượng nhà máy</div><div id="clk" style="font-family:'DejaVu Sans Mono',monospace;font-size:20px;color:var(--muted)"></div></div>
+ <div style="display:flex;gap:14px;margin-top:22px"><div class="kpi"><div class="kl">Công suất tổng</div><div class="kv"><span id="k1"></span><span class="ku">kW</span></div></div><div class="kpi"><div class="kl">Điện năng hôm nay</div><div class="kv"><span id="k2"></span><span class="ku">kWh</span></div></div><div class="kpi"><div class="kl">Hệ số cos φ</div><div class="kv"><span id="k3"></span></div></div></div>
+ <div style="display:flex;gap:22px;margin-top:22px;font-size:18px;color:var(--muted)"><span><i class="dot" style="background:#22d3ee;width:10px;height:10px"></i> Xưởng A</span><span><i class="dot" style="background:#fbbf24;width:10px;height:10px"></i> Xưởng B</span><span><i class="dot" style="background:#34d399;width:10px;height:10px"></i> Xưởng C</span><span style="margin-left:auto">Công suất (kW) · 60 phút</span></div>
+ <svg id="ch" width="680" height="290" style="margin-top:10px"></svg>
+ <div id="alr" style="margin-top:14px;padding:14px 18px;border-radius:14px;background:rgba(248,113,113,.12);border:1.5px solid rgba(248,113,113,.55);font-size:21px;font-weight:600;display:flex;align-items:center;gap:12px;opacity:0">${icon('bell',28,'#f87171')}Xưởng B vượt ngưỡng 160 kW — đã gửi cảnh báo</div>`;
+ const ch=db.querySelector('#ch');const CN='http://www.w3.org/2000/svg';
+ for(let i=0;i<5;i++){const l=document.createElementNS(CN,'line');l.setAttribute('x1',0);l.setAttribute('x2',680);l.setAttribute('y1',10+i*65);l.setAttribute('y2',10+i*65);l.setAttribute('stroke','#1d3350');ch.appendChild(l)}
+ const thr=document.createElementNS(CN,'line');thr.setAttribute('x1',0);thr.setAttribute('x2',680);thr.setAttribute('stroke','#f87171');thr.setAttribute('stroke-dasharray','8 6');thr.setAttribute('stroke-width',1.5);ch.appendChild(thr);
+ const SER=[['#22d3ee',120,14,0],['#fbbf24',130,10,1.7],['#34d399',85,9,3.1]].map(([c,b,a,ph],k)=>{const pts=[];for(let i=0;i<=60;i++){let v=b+a*Math.sin(i*.31+ph)+a*.5*Math.sin(i*.87+ph*2);if(k===1&&i>46)v+=(i-46)*2.6;pts.push(v)}
+  const e=document.createElementNS(CN,'polyline');e.setAttribute('fill','none');e.setAttribute('stroke',c);e.setAttribute('stroke-width',3);e.setAttribute('stroke-linejoin','round');ch.appendChild(e);return{e,pts}});
+ const yv=v=>280-(v-40)/(180-40)*270;thr.setAttribute('y1',yv(160));thr.setAttribute('y2',yv(160));
+ const k1=db.querySelector('#k1'),k2=db.querySelector('#k2'),k3=db.querySelector('#k3'),clk=db.querySelector('#clk'),alr=db.querySelector('#alr'),live=db.querySelector('#live');
+ UPD.s5=t=>{up(o,t,.2,{dy:-20});up(h,t,.35);
+  meters.forEach((m,i)=>up(m,t,.8+i*.18,{dx:-40,dy:0}));
+  lcds.forEach((l,i)=>{const P=[142.3,168.9,96.4][i]+3*Math.sin(t*1.9+i)+1.2*Math.sin(t*5.3+i*2);l.innerHTML=`U  ${fmt(230.8+.6*Math.sin(t*2+i))} V<br>P  ${fmt(P)} kW`});
+  lines.forEach((l,i)=>{const L=+l.dataset.L;const pr=eo(prog(t,i<3?1.4+i*.1:2.6,.8));l.style.strokeDashoffset=L*(1-pr)});
+  up(gw,t,1.9,{s0:.8,dy:0,ease:eob});up(gwl,t,2.1,{dy:14});up(busL,t,2.0,{dy:14});up(cl,t,2.5,{s0:.6,dy:0,ease:eob});up(clt,t,2.7,{dy:10});up(clb,t,2.8,{dy:-10});
+  pk.forEach(p=>{const a=clamp((t-3.2)/.5);if(!a){p.el.style.opacity=0;return}const f=((t-3.2)*p.sp+p.ph)%1;const [x,y]=at(p.path,f);p.el.setAttribute('cx',x);p.el.setAttribute('cy',y);p.el.style.opacity=a*Math.min(1,f*8,(1-f)*8)});
+  up(cap,t,3.4);
+  up(db,t,4.0,{dx:60,dy:0});
+  const pv=clamp((t-4.6)/7.5);
+  k1.textContent=fmt((428.6+6*Math.sin(t*1.7)+3*Math.sin(t*4.1)+(t>11?18:0))*eo(clamp((t-4.4)/1.2)));
+  k2.textContent=fmt(6842+((t-4.4)*3.7)*eo(clamp((t-4.4)/1.2)),0).replace(/^(-?)/,'$1');k2.textContent=fmt(Math.max(0,6842*eo(clamp((t-4.4)/1.6))+Math.max(0,t-6)*2.3),0);
+  k3.textContent=(0.94+.008*Math.sin(t*1.3)).toFixed(2);
+  const sec=Math.floor(t);clk.textContent=`14:32:${String(10+sec).padStart(2,'0')}`;live.style.opacity=.4+.6*(Math.sin(t*6)>0);
+  SER.forEach(S=>{const n=pv*60;const pts=[];for(let i=0;i<=Math.floor(n);i++)pts.push([i/60*680,yv(S.pts[i])]);const fi=Math.floor(n);if(fi<60){const q=n-fi;pts.push([(fi+q)/60*680,yv(lerp(S.pts[fi],S.pts[fi+1],q))])}S.e.setAttribute('points',pts.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' '))});
+  thr.style.opacity=clamp((t-5)/.5);
+  const ap=eob(clamp((t-11.3)/.5));alr.style.opacity=clamp((t-11.3)/.3);alr.style.transform=`translateY(${(1-ap)*20}px)`;
+ };
+})();
+
+// ===================== S6 factory monitoring =====================
+(()=>{const s=$('s6');
+ const o=add(s,'<div class="a ov" style="left:110px;top:66px">Ứng dụng 02</div>');
+ const h=add(s,'<div class="a h2" style="left:110px;top:104px">Giám sát <span style="color:var(--cyan)">IoT nhà máy</span></div>');
+ const M=[['Máy CNC 01','Phân xưởng cơ khí',1240,.9],['Máy ép 02','Phân xưởng ép nhựa',3815,1.6],['Băng tải 03','Khu đóng gói',8920,3.1],['Máy nén khí 04','Phòng máy',null,0]];
+ // state(t): 0 run,1 stop,2 wait
+ const ST=[t=>0,t=>t>=8.2?2:0,t=>0,t=>(t>=6&&t<10.6)?1:0];
+ const SC=[['Đang chạy','#34d399'],['Dừng','#f87171'],['Chờ vật liệu','#fbbf24']];
+ const svg=add(s,'<svg class="a" style="left:0;top:0;opacity:1" width="1920" height="1080"></svg>');
+ const NS='http://www.w3.org/2000/svg';
+ const GX=1150,GY=545;
+ const cards=M.map((m,i)=>{const c=i%2,r=(i/2)|0,x=110+c*480,y=225+r*300;
+  const ln=document.createElementNS(NS,'line');ln.setAttribute('x1',x+450);ln.setAttribute('y1',y+135);ln.setAttribute('x2',GX);ln.setAttribute('y2',GY);ln.setAttribute('stroke','#2b4a6d');ln.setAttribute('stroke-width',2.5);ln.setAttribute('stroke-dasharray','7 7');svg.appendChild(ln);
+  const e=add(s,`<div class="a cardbox mach" style="left:${x}px;top:${y}px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="mn">${m[0]}</div><div class="ms">${m[1]}</div></div><div class="stat"><i class="dot"></i><span></span></div></div>
+  <div class="row"><div><div class="lb">${m[2]!=null?'Sản lượng (DI)':'Áp suất'}</div><div class="vl c1"></div></div><div style="text-align:right"><div class="lb">Thời gian chạy</div><div class="vl c2" style="font-size:34px;margin-top:4px"></div></div></div></div>`);
+  return{e,ln,st:e.querySelector('.stat'),sd:e.querySelector('.stat .dot'),ss:e.querySelector('.stat span'),c1:e.querySelector('.c1'),c2:e.querySelector('.c2')}});
+ const gw=add(s,`<div class="a" style="left:${GX-75}px;top:${GY-75}px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,#123a52,#0b2032);border:2.5px solid #22d3ee;box-shadow:0 0 40px rgba(34,211,238,.4);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#22d3ee">${icon('chip',54,'#22d3ee')}<div style="font-size:17px;font-weight:800;color:#e8f1ff;margin-top:4px">Gateway</div></div>`);
+ const pkt=[...Array(8)].map((_,i)=>{const c=document.createElementNS(NS,'circle');c.setAttribute('r',5.5);c.setAttribute('fill','#22d3ee');svg.appendChild(c);return{c,m:i%4,ph:i<4?0:.5}});
+ // right panel
+ const rp=add(s,'<div class="a cardbox" style="left:1290px;top:200px;width:550px;height:580px;padding:28px 30px"></div>');
+ rp.innerHTML=`<div style="font-size:24px;font-weight:800;display:flex;align-items:center;gap:12px">${icon('monitor',30,'#22d3ee')}Bảng điều khiển</div>
+ <div style="display:flex;align-items:center;gap:26px;margin-top:20px"><svg width="170" height="170" viewBox="0 0 170 170"><circle cx="85" cy="85" r="70" fill="none" stroke="#1d3350" stroke-width="16"/><circle id="oee" cx="85" cy="85" r="70" fill="none" stroke="#34d399" stroke-width="16" stroke-linecap="round" transform="rotate(-90 85 85)" stroke-dasharray="439.8" stroke-dashoffset="439.8"/><text id="oeet" x="85" y="96" text-anchor="middle" fill="#e8f1ff" font-size="38" font-weight="800" font-family="Inter"></text></svg>
+ <div><div style="font-size:20px;color:var(--muted)">OEE hôm nay</div><div style="font-size:30px;font-weight:800;margin-top:4px">Máy chạy: <span id="nrun"></span>/4</div><div style="font-size:20px;color:var(--muted);margin-top:6px">Cập nhật mỗi 1 giây</div></div></div>
+ <div id="toast" style="margin-top:22px;padding:16px 18px;border-radius:16px;display:flex;gap:14px;align-items:flex-start;opacity:0"><div id="tic"></div><div><div id="tt1" style="font-size:22px;font-weight:800"></div><div id="tt2" style="font-size:18px;color:var(--muted);margin-top:4px"></div></div></div>
+ <div style="margin-top:22px;font-size:19px;color:var(--muted);font-weight:700;letter-spacing:.12em">ĐIỀU KHIỂN RELAY TỪ XA</div>
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:22px;font-weight:600">Relay 1 · Còi &amp; đèn báo<div class="toggle" id="tg1"><i></i></div></div>
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:22px;font-weight:600">Relay 2 · Quạt hút tủ điện<div class="toggle" id="tg2"><i></i></div></div>`;
+ const q=sel=>rp.querySelector(sel);const oee=q('#oee'),oeet=q('#oeet'),nrun=q('#nrun'),toast=q('#toast'),tic=q('#tic'),tt1=q('#tt1'),tt2=q('#tt2'),tg1=q('#tg1'),tg2=q('#tg2');
+ const setTg=(el,on)=>{el.style.background=on?'#34d399':'#24364f';el.firstElementChild.style.transform=`translateX(${on?40:0}px)`};
+ const chips=['Đếm sản lượng qua DI','Trạng thái máy 24/7','Cảnh báo tức thì qua App / Email','Điều khiển từ xa qua Relay'].map(c=>`<span class="chip" style="margin:0">${c}</span>`);
+ const crow=add(s,`<div class="a" style="left:110px;top:930px;width:1730px;display:flex;gap:18px;opacity:1">${chips.join('')}</div>`);const chipEls=[...crow.children];
+ UPD.s6=t=>{up(o,t,.2,{dy:-20});up(h,t,.35);
+  let nr=0;
+  cards.forEach((c,i)=>{up(c.e,t,.7+i*.15,{dy:40,s0:.92});c.ln.style.opacity=clamp((t-1.4)/.6);c.ln.style.strokeDashoffset=-t*30;
+   const sv=ST[i](t);if(sv===0)nr++;const [lbl,col]=SC[sv];c.ss.textContent=lbl;c.sd.style.background=col;c.st.style.background=col+'22';c.st.style.color=col;c.st.style.boxShadow=sv===1?`0 0 ${12+10*Math.sin(t*10)}px ${col}`:'none';
+   c.e.style.borderColor=sv===1?'rgba(248,113,113,.8)':'';
+   // running time integration (approx)
+   let run=0;for(let k=0;k<t;k+=.1)if(ST[i](k)===0)run+=.1;
+   if(M[i][2]!=null)c.c1.textContent=(M[i][2]+Math.floor(run*M[i][3])).toLocaleString('vi-VN');
+   else c.c1.innerHTML=(sv===1?(6.9-Math.min(2.2,(t-6)*.9)):(7.2+.05*Math.sin(t*3))).toFixed(1)+'<span class="ku" style="font-size:20px;color:var(--muted)"> bar</span>';
+   const base=[6*3600+42*60,5*3600+10*60,7*3600+3*60,4*3600+55*60][i]+Math.floor(run*60);c.c2.textContent=`${Math.floor(base/3600)}h ${String(Math.floor(base/60)%60).padStart(2,'0')}m`});
+  up(gw,t,1.2,{s0:.6,dy:0,ease:eob});
+  pkt.forEach(p=>{const c=cards[p.m];const a=clamp((t-2)/.5);const f=((t-2)*.55+p.ph+p.m*.13)%1;const x1=+c.ln.getAttribute('x1'),y1=+c.ln.getAttribute('y1');p.c.setAttribute('cx',lerp(x1,GX-75,f));p.c.setAttribute('cy',lerp(y1,GY,f));p.c.style.opacity=a*Math.min(1,f*6,(1-f)*6)});
+  up(rp,t,1.6,{dx:60,dy:0});
+  const oeev=lerp(0,.87,eo(clamp((t-2.2)/1.5)))-(t>6&&t<10.6?.04*clamp((t-6)/1):0);oee.setAttribute('stroke-dashoffset',439.8*(1-oeev));oeet.textContent=Math.round(oeev*100)+'%';
+  nrun.textContent=nr;
+  // toast
+  if(t<6.3){toast.style.opacity=0}else{const rec=t>=10.8;const col=rec?'#34d399':'#f87171';toast.style.opacity=clamp((t-6.3)/.3);toast.style.transform=`translateX(${(1-eob(clamp((t-6.3)/.5)))*40}px)`;toast.style.background=col+'1c';toast.style.border=`1.5px solid ${col}99`;
+   tic.innerHTML=icon(rec?'shield':'bell',34,col);tt1.textContent=rec?'Máy nén khí 04 đã hoạt động lại':'Máy nén khí 04 dừng đột ngột!';tt2.textContent=rec?'14:36 · Thời gian dừng: 4 phút':'14:32 · Đã gửi thông báo đến tổ bảo trì'}
+  setTg(tg1,t>=7.3&&t<10.8);setTg(tg2,t>=2.5);
+  chipEls.forEach((c,i)=>up(c,t,3+i*.25,{dy:24,s0:.9}));
+ };
+})();
+
+// ===================== S7 enclosure =====================
+(()=>{const s=$('s7');
+ const o=add(s,'<div class="a ov" style="left:110px;top:260px">Thiết kế công nghiệp</div>');
+ const h=add(s,'<div class="a h2" style="left:110px;top:305px;width:740px;font-size:68px">Vỏ hộp DIN-rail<br><span class="grad">gọn trong tủ điện</span></div>');
+ const B=[['din','Gắn thanh ray DIN tiêu chuẩn'],['tool','Domino cắm rút — đấu nối nhanh'],['shield','Chống xung, ổn định 24/7']].map((b,i)=>add(s,`<div class="a bul" style="left:110px;top:${540+i*78}px"><span style="color:#34d399">${icon(b[0],40,'#34d399')}</span>${b[1]}</div>`));
+ const P=[['enclosure_front',890,250,-4],['hand_enclosure',1225,210,2.5],['enclosure_pair',1545,270,-2]].map(p=>{const e=add(s,`<div class="a pcard" style="left:${p[1]}px;top:${p[2]}px"><img src="assets/${p[0]}.jpg"></div>`);return{e,img:e.querySelector('img'),r:p[3]}});
+ UPD.s7=t=>{up(o,t,.3,{dy:-20});up(h,t,.45);B.forEach((b,i)=>up(b,t,1.2+i*.25,{dx:-30,dy:0}));
+  P.forEach((p,i)=>{up(p.e,t,.3+i*.25,{dy:140,r:p.r,s0:.9});p.img.style.transform=`scale(${1.04+.05*t/7})`})};
+})();
+
+// ===================== S8 CTA =====================
+(()=>{const s=$('s8');
+ const bg=add(s,'<img class="a" id="s8bg" src="assets/bg_blur.jpg">');
+ const sh=add(s,'<div class="a" style="inset:0;left:0;top:0;width:1920px;height:1080px;background:radial-gradient(circle at 50% 45%,rgba(6,14,26,.35),rgba(6,14,26,.92))"></div>');
+ const h=add(s,'<div class="a h2" style="left:0;width:1920px;text-align:center;top:170px;font-size:76px">Biến dữ liệu thành <span style="color:var(--amber)">tiết kiệm</span></div>');
+ const PL=[['leaf','#34d399','Tiết kiệm điện năng','Phát hiện lãng phí, tối ưu phụ tải'],['monitor','#22d3ee','Giám sát realtime','Mọi lúc, mọi nơi trên điện thoại'],['gauge','#fbbf24','Giảm dừng máy','Cảnh báo sớm, bảo trì kịp thời']]
+  .map((p,i)=>add(s,`<div class="a pillar" style="left:${270+i*480}px;top:330px"><div class="pi" style="border-color:${p[1]}66;background:${p[1]}14">${icon(p[0],56,p[1])}</div><div class="pt">${p[2]}</div><div class="ps">${p[3]}</div></div>`));
+ const brand=add(s,'<div class="a" style="left:0;width:1920px;top:690px;text-align:center"><div style="font-size:92px;font-weight:900;letter-spacing:.06em">ZENO<span class="grad"> PCB</span></div><div style="font-size:30px;color:#cfe2f7;margin-top:6px;font-weight:600">IoT Gateway ESP32-S3 · Thu thập dữ liệu &amp; Giám sát nhà máy</div></div>');
+ const url=add(s,'<div class="a" style="left:0;width:1920px;top:900px;text-align:center"><span class="chip" style="font-size:30px;padding:14px 34px;border-color:#34d399;color:#34d399;background:rgba(52,211,153,.1)">zenopcb.vn &nbsp;·&nbsp; Liên hệ tư vấn giải pháp</span></div>');
+ UPD.s8=t=>{bg.style.opacity=1;bg.style.transform=`scale(${1+.04*t/7})`;sh.style.opacity=1;
+  up(h,t,.3,{dy:40});PL.forEach((p,i)=>up(p,t,.9+i*.2,{dy:50,s0:.9,ease:eob}));up(brand,t,2.4,{dy:40,s0:.95});up(url,t,3.0,{dy:30})};
+})();
+
+// ===================== render =====================
+window.render=t=>{
+  drawBg(t);
+  for(const [id,a,b] of SCENES){const el=$(id);
+    if(t<a||t>b){el.style.display='none';continue}
+    el.style.display='block';
+    const fi=a===0?1:clamp((t-a)/.4),fo=b>=window.DURATION?1:1-clamp((t-(b-.4))/.4);
+    el.style.opacity=Math.min(fi,fo);UPD[id](t-a)}
+  $('black').style.opacity=clamp((t-(window.DURATION-.9))/.8)+ (1-clamp(t/.6));
+};
+window.READY=false;
+Promise.all([...document.images].map(i=>i.decode().catch(()=>{}))).then(()=>document.fonts.ready).then(()=>{window.render(0);window.READY=true});
+</script>
+</body>
+</html>
