@@ -1,0 +1,147 @@
+{
+ "timing": {
+  "scenes": {
+   "s1": [
+    0.0,
+    6.295
+   ],
+   "s2": [
+    5.895,
+    15.284
+   ],
+   "s3": [
+    14.884,
+    52.668
+   ],
+   "s4": [
+    52.268,
+    58.668
+   ],
+   "s5": [
+    58.268,
+    72.985
+   ],
+   "s6": [
+    72.585,
+    85.985
+   ],
+   "s7": [
+    85.585,
+    92.985
+   ],
+   "s8": [
+    92.585,
+    100.785
+   ]
+  },
+  "tour": [
+   3.783,
+   5.718,
+   3.617,
+   5.323,
+   4.29,
+   4.07,
+   4.29,
+   3.675,
+   2.618
+  ],
+  "duration": 100.785
+ },
+ "voice": [
+  [
+   0.35,
+   2.61,
+   "Nhà máy của bạn đang tiêu thụ bao nhiêu điện, ngay lúc này?"
+  ],
+  [
+   3.6,
+   1.7,
+   "Đo lường. Giám sát. Điều khiển."
+  ],
+  [
+   6.4,
+   7.89,
+   "Giới thiệu bộ ai ô ti gết uê, e ét pi ba hai, của Kiu Ây Ga. Thu thập dữ liệu và điều khiển công nghiệp, đưa mọi thiết bị trong nhà máy lên đám mây."
+  ],
+  [
+   15.48,
+   2.83,
+   "Chỉ một bo mạch nhỏ gọn, tích hợp đầy đủ kết nối công nghiệp."
+  ],
+  [
+   19.12,
+   4.82,
+   "Vi xử lý e ét pi ba hai, lõi kép, có oai phai, blu tút và ăng ten ngoài cho sóng ổn định."
+  ],
+  [
+   24.84,
+   2.72,
+   "Cổng mạng i tơ nét có dây, ổn định cho hạ tầng nhà máy."
+  ],
+  [
+   28.45,
+   4.42,
+   "Cổng a ét bốn tám lăm, giao thức mốt bớt, đọc đồng hồ điện, biến tần và cảm biến."
+  ],
+  [
+   33.78,
+   3.39,
+   "Bốn ngõ vào số cách ly quang, đọc trạng thái máy và đếm sản phẩm."
+  ],
+  [
+   38.07,
+   3.17,
+   "Bốn rơ le mười am pe có chống xung, bật tắt thiết bị từ xa."
+  ],
+  [
+   42.13,
+   3.39,
+   "Đồng hồ thời gian thực và thẻ nhớ, lưu dữ liệu ngay cả khi mất mạng."
+  ],
+  [
+   46.43,
+   2.77,
+   "Nguồn một chiều công nghiệp, cổng u ét bi xi để nạp chương trình."
+  ],
+  [
+   50.1,
+   1.72,
+   "Và sẵn sàng mở rộng mạng bốn gờ."
+  ],
+  [
+   52.67,
+   3.26,
+   "Mạnh mẽ, linh hoạt, bền bỉ. Tất cả trong một thiết bị nhỏ gọn."
+  ],
+  [
+   58.77,
+   8.78,
+   "Ứng dụng thứ nhất: thu thập dữ liệu điện năng. Gết uê đọc điện áp, dòng điện, công suất và điện năng tiêu thụ từ các đồng hồ điện, rồi gửi lên đám mây theo thời gian thực."
+  ],
+  [
+   69.27,
+   2.72,
+   "Khi phụ tải vượt ngưỡng, hệ thống cảnh báo ngay lập tức."
+  ],
+  [
+   73.08,
+   5.61,
+   "Ứng dụng thứ hai: giám sát ai ô ti nhà máy. Theo dõi trạng thái từng máy, đếm sản lượng suốt hai mươi bốn giờ."
+  ],
+  [
+   78.78,
+   3.87,
+   "Máy dừng đột ngột? Cảnh báo được gửi ngay, rơ le kích hoạt còi báo từ xa."
+  ],
+  [
+   85.98,
+   3.38,
+   "Vỏ hộp gắn thanh ray đin, lắp gọn trong tủ điện, đấu nối nhanh chóng."
+  ],
+  [
+   92.98,
+   5.79,
+   "Biến dữ liệu thành tiết kiệm. Kiu Ây Ga, giải pháp ai ô ti cho nhà máy của bạn. Liên hệ ngay để được tư vấn."
+  ]
+ ]
+}

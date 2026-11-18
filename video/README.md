@@ -1,26 +1,32 @@
 # Video giới thiệu – QA-GAS IoT Gateway ESP32-S3
 
-Video 82 giây, Full HD 1920×1080, 30 fps, có nhạc nền (tự tổng hợp, không vướng bản quyền).
+Video ~100 giây, Full HD 1920×1080, 30 fps, **giọng đọc tiếng Việt** + nhạc nền (tự tổng hợp, không vướng bản quyền).
+Logo QA-GAS (Quốc Anh); chữ ZENO PCB in trên bo mạch đã được làm mờ.
 
-**File video:** `out/qa_gas_iot_gateway.mp4`
+**File video:** `out/qa_gas_iot_gateway.mp4` · Thời điểm từng câu thoại: `out/timeline.json`
 
 ## Kịch bản
-| Thời gian | Cảnh |
+| Cảnh | Nội dung |
 |---|---|
-| 0–6s | Mở đầu: "Nhà máy của bạn đang tiêu thụ bao nhiêu điện — ngay lúc này?" → Đo lường. Giám sát. Điều khiển. |
-| 6–12s | Ra mắt sản phẩm: IoT Gateway ESP32-S3 |
-| 12–35s | Khám phá phần cứng (8 điểm): ESP32-S3 + anten, Ethernet, RS485, 4 DI, 4 Relay, RTC + MicroSD, nguồn + USB-C, LTE |
-| 35–41s | Thông số nổi bật |
-| 41–55s | Ứng dụng 1: Thu thập dữ liệu điện năng (đồng hồ điện → RS485 → Gateway → Cloud → Dashboard) |
-| 55–68s | Ứng dụng 2: Giám sát IoT nhà máy (trạng thái máy, đếm sản lượng, cảnh báo, relay từ xa, OEE) |
-| 68–75s | Vỏ hộp DIN-rail |
-| 75–82s | Lợi ích + logo & thương hiệu QA-GAS (Quốc Anh) |
+| 1 | Mở đầu: "Nhà máy của bạn đang tiêu thụ bao nhiêu điện — ngay lúc này?" → Đo lường. Giám sát. Điều khiển. |
+| 2 | Ra mắt sản phẩm: IoT Gateway ESP32-S3 |
+| 3 | Khám phá phần cứng (8 điểm): ESP32-S3 + anten, Ethernet, RS485, 4 DI, 4 Relay, RTC + MicroSD, nguồn + USB-C, LTE |
+| 4 | Thông số nổi bật |
+| 5 | Ứng dụng 1: Thu thập dữ liệu điện năng |
+| 6 | Ứng dụng 2: Giám sát IoT nhà máy |
+| 7 | Vỏ hộp DIN-rail |
+| 8 | Lợi ích + logo QA-GAS |
 
 ## Chỉnh sửa & render lại
-- Nội dung, chữ, thời lượng từng cảnh: sửa trong `index.html` (mảng `SCENES`, `STOPS`, và từng khối `S1`…`S8`).
-- Nhạc nền: `music.py`.
-- Render (cần Node + Playwright + ffmpeg + Python/numpy):
-  ```bash
-  node render.cjs                    # render video đầy đủ -> out/qa_gas_iot_gateway.mp4
-  node render.cjs --stills 5,20,45   # xuất ảnh xem trước tại các giây chỉ định
-  ```
+Cần: Node + Playwright, ffmpeg, Python (numpy, Pillow, `pip install piper-tts`).
+
+1. Giọng đọc (Piper, giọng `vi_VN-vais1000-medium`, dữ liệu VAIS-1000 – CC BY 4.0). Tải model vào `voices/`:
+   ```bash
+   curl -L https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-vi_VN-vais1000-medium.tar.bz2 | tar xj
+   cp vits-piper-vi_VN-vais1000-medium/vi_VN-vais1000-medium.onnx* voices/
+   ```
+2. Sửa lời thoại trong `build_voice.py` (`SCRIPT`, `TOUR`; cách đọc tên thương hiệu ở `BRAND`), rồi chạy
+   `python3 build_voice.py` → tạo `out/voice.wav` và `timing.js` (thời lượng cảnh tự giãn theo lời thoại).
+3. Ảnh: ảnh gốc nằm ở `assets/src/`; `python3 prep_assets.py` làm mờ chữ trên bo và tạo ảnh dùng trong video.
+4. Hình ảnh/chữ trên màn hình: `index.html`. Nhạc: `music.py`.
+5. Render: `node render.cjs` (xem trước: `node render.cjs --stills 5,20,45`).

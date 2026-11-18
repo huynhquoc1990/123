@@ -1,6 +1,7 @@
 // Render index.html frame-by-frame to MP4.
 // Usage:
-//   node render.cjs                      -> out/qa_gas_iot_gateway.mp4 (with music)
+//   python3 build_voice.py               -> voiceover + timing.js (optional)
+//   node render.cjs                      -> out/qa_gas_iot_gateway.mp4 (music + voice)
 //   node render.cjs --stills 3,15,45     -> out/still_<t>.png previews
 const { chromium } = require('playwright');
 const { spawn, execFileSync } = require('child_process');
@@ -70,9 +71,17 @@ async function renderChunk(browser, f0, f1, file) {
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', silent]);
 
   const music = path.join(OUT, 'music.wav');
-  if (!fs.existsSync(music)) execFileSync('python3', [path.join(ROOT, 'music.py'), music, String(dur)], { stdio: 'inherit' });
+  const timing = path.join(ROOT, 'timing.js');
+  execFileSync('python3', [path.join(ROOT, 'music.py'), music, String(dur), ...(fs.existsSync(timing) ? [timing] : [])], { stdio: 'inherit' });
+  const voice = path.join(OUT, 'voice.wav');
   const final = path.join(OUT, 'qa_gas_iot_gateway.mp4');
-  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', silent, '-i', music, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k',
+  const audio = fs.existsSync(voice)
+    ? ['-i', music, '-i', voice, '-filter_complex',
+       '[2:a]highpass=f=70,acompressor=threshold=-20dB:ratio=3:attack=5:release=90,volume=1.25,asplit=2[vo][sc];' +
+       '[1:a]volume=0.42[m];[m][sc]sidechaincompress=threshold=0.02:ratio=6:attack=15:release=450[duck];' +
+       '[duck][vo]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-15:TP=-1.5:LRA=11,aresample=44100[a]', '-map', '0:v', '-map', '[a]']
+    : ['-i', music];
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', silent, ...audio, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k',
     '-shortest', '-movflags', '+faststart', final]);
   for (const p of [...parts, list, silent]) fs.unlinkSync(p);
   console.log('Done ->', final);
