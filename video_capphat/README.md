@@ -1,6 +1,6 @@
 # Video giới thiệu – Hệ thống cấp phát nhiên liệu nội bộ thông minh (Quốc Anh Gas)
 
-Video ~113 giây, Full HD 1920×1080, 30 fps, **giọng đọc tiếng Việt** + nhạc nền tự tổng hợp (không vướng bản quyền).
+Video ~129 giây, Full HD 1920×1080, 30 fps, **giọng đọc tiếng Việt** + nhạc nền tự tổng hợp (không vướng bản quyền).
 
 **File video:** `out/he_thong_cap_phat_nhien_lieu.mp4` · Phụ đề: `out/phu_de.srt` · Thời điểm từng câu: `out/timeline.json`
 
@@ -12,7 +12,8 @@ Video ~113 giây, Full HD 1920×1080, 30 fps, **giọng đọc tiếng Việt** 
 | 3 | Quy trình 4 bước (ảnh chụp app thật): 1 Đề nghị → 2 Phê duyệt → 3 Phiếu QR |
 | 4 | Bước 4 tại trụ: quét QR → màn hình bơm đếm 0 → 18,5 L rồi tự ngắt → in biên lai, đồng bộ máy chủ |
 | 5 | Trụ bơm thông minh (7 điểm): tủ thép, đầu đọc QR, màn hình cảm ứng, máy in nhiệt, bộ đếm số cơ, ăng-ten, cụm bơm + bo điều khiển RS485 |
-| 6 | Phần mềm quản trị: nhiều công ty/chi nhánh, hạn mức theo kỳ, phê duyệt, tồn bồn, đối soát theo ca, lịch sử bơm |
+| 5b | Thông số kỹ thuật: mô-tơ Toshiba, đo lường Tatsuno / Shibata, lưu lượng 50–70 L/phút, sai số, kết nối, quản trị Cloud |
+| 6 | Hệ quản trị đám mây: nhiều công ty/chi nhánh, hạn mức theo kỳ, phê duyệt, tồn bồn, đối soát theo ca, lịch sử bơm |
 | 7 | Năng lực sản xuất: gia công tủ → lắp ráp → hoàn thiện |
 | 8 | Lợi ích + logo Quốc Anh Gas + lời kêu gọi liên hệ |
 

@@ -18,7 +18,9 @@ LENGTH_SCALE = float(os.environ.get('VOICE_SPEED', '0.93'))  # < 1 = faster
 os.makedirs(CACHE, exist_ok=True)
 
 # How words are read aloud (TTS) vs. written in the subtitles.
-SAY = {'Quốc Anh Gas': 'Quốc Anh Ga', 'mã QR': 'mã kiu a', 'RS485': 'a ét bốn tám lăm'}
+SAY = {'Quốc Anh Gas': 'Quốc Anh Ga', 'mã QR': 'mã kiu a', 'RS485': 'a ét bốn tám lăm', 'Toshiba': 'Tô si ba',
+       'Tatsuno': 'Tát su nô', 'Shibata': 'Si ba ta', '50 đến 70': 'năm mươi đến bảy mươi', '±0,3%': 'cộng trừ không phẩy ba phần trăm',
+       '4G': 'bốn gờ', 'Wi-Fi': 'oai phai', 'mô-tơ': 'mô tơ'}
 
 # ---- Script ------------------------------------------------------------------------------
 # scene: (minimum duration, first-line delay, [(text, minimum slot before the next line)])
@@ -49,9 +51,12 @@ SCENES = {
         ('Máy in nhiệt in biên lai cho từng lần bơm.', 3.0),
         ('Bộ đếm số cơ, đối chiếu độc lập với số liệu điện tử.', 3.0),
         ('Ăng ten giữ kết nối liên tục với máy chủ.', 3.0),
-        ('Bên trong là cụm bơm, lưu lượng kế và bo điều khiển, giao tiếp qua cổng RS485.', 3.0)]),
+        ('Bên trong là mô-tơ bơm Toshiba, bộ đo lường Tatsuno hoặc Shibata và bo điều khiển, giao tiếp qua cổng RS485.', 3.0)]),
+    's5b': (8.0, 0.5, [  # technical specifications
+        ('Thông số kỹ thuật: mô-tơ bơm Toshiba, bộ đo lường Tatsuno hoặc Shibata, lưu lượng từ 50 đến 70 lít mỗi phút, sai số chỉ ±0,3%.', 6.0),
+        ('Kết nối 4G và Wi-Fi, toàn bộ dữ liệu được quản trị trên nền tảng đám mây.', 3.0)]),
     's6': (8.0, 0.5, [
-        ('Phần mềm quản trị chạy trên máy tính và điện thoại.', 3.0),
+        ('Hệ quản trị đám mây, truy cập mọi lúc trên máy tính và điện thoại.', 3.0),
         ('Quản lý nhiều công ty, nhiều chi nhánh. Đặt hạn mức theo kỳ cho từng xe và tài xế.', 3.5),
         ('Phê duyệt đề nghị, theo dõi tồn bồn, và đối soát số lít với số cơ theo từng ca.', 3.5)]),
     's7': (7.5, 0.5, [

@@ -71,30 +71,38 @@ Bộ đếm số cơ, đối chiếu độc lập với số liệu điện tử
 Ăng ten giữ kết nối liên tục với máy chủ.
 
 19
-00:01:15,220 --> 00:01:20,030
-Bên trong là cụm bơm, lưu lượng kế và bo điều khiển, giao tiếp qua cổng RS485.
+00:01:15,220 --> 00:01:21,890
+Bên trong là mô-tơ bơm Toshiba, bộ đo lường Tatsuno hoặc Shibata và bo điều khiển, giao tiếp qua cổng RS485.
 
 20
-00:01:20,980 --> 00:01:23,490
-Phần mềm quản trị chạy trên máy tính và điện thoại.
+00:01:22,840 --> 00:01:31,840
+Thông số kỹ thuật: mô-tơ bơm Toshiba, bộ đo lường Tatsuno hoặc Shibata, lưu lượng từ 50 đến 70 lít mỗi phút, sai số chỉ ±0,3%.
 
 21
-00:01:23,980 --> 00:01:28,540
-Quản lý nhiều công ty, nhiều chi nhánh. Đặt hạn mức theo kỳ cho từng xe và tài xế.
+00:01:31,940 --> 00:01:36,330
+Kết nối 4G và Wi-Fi, toàn bộ dữ liệu được quản trị trên nền tảng đám mây.
 
 22
-00:01:28,640 --> 00:01:33,100
-Phê duyệt đề nghị, theo dõi tồn bồn, và đối soát số lít với số cơ theo từng ca.
+00:01:37,280 --> 00:01:40,580
+Hệ quản trị đám mây, truy cập mọi lúc trên máy tính và điện thoại.
 
 23
-00:01:34,050 --> 00:01:39,230
-Từ khung tủ, lắp ráp cơ khí đến lập trình phần mềm, tất cả do Quốc Anh Gas thực hiện trọn gói.
+00:01:40,690 --> 00:01:45,250
+Quản lý nhiều công ty, nhiều chi nhánh. Đặt hạn mức theo kỳ cho từng xe và tài xế.
 
 24
-00:01:41,050 --> 00:01:44,820
-Chống thất thoát. Minh bạch từng lít dầu. Tiết kiệm thời gian cho đội xe.
+00:01:45,350 --> 00:01:49,810
+Phê duyệt đề nghị, theo dõi tồn bồn, và đối soát số lít với số cơ theo từng ca.
 
 25
-00:01:45,650 --> 00:01:50,160
+00:01:50,760 --> 00:01:55,940
+Từ khung tủ, lắp ráp cơ khí đến lập trình phần mềm, tất cả do Quốc Anh Gas thực hiện trọn gói.
+
+26
+00:01:57,760 --> 00:02:01,530
+Chống thất thoát. Minh bạch từng lít dầu. Tiết kiệm thời gian cho đội xe.
+
+27
+00:02:02,360 --> 00:02:06,870
 Quốc Anh Gas, hệ thống cấp phát nhiên liệu nội bộ thông minh. Liên hệ ngay để được tư vấn.
 

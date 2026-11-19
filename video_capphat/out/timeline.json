@@ -19,19 +19,23 @@
    ],
    "s5": [
     53.861,
-    80.978
+    82.835
+   ],
+   "s5b": [
+    82.335,
+    97.284
    ],
    "s6": [
-    80.478,
-    94.052
+    96.784,
+    110.761
    ],
    "s7": [
-    93.552,
-    101.052
+    110.261,
+    117.761
    ],
    "s8": [
-    100.552,
-    112.552
+    117.261,
+    129.261
    ]
   },
   "cues": {
@@ -64,10 +68,14 @@
     18.354,
     21.354
    ],
+   "s5b": [
+    0.5,
+    9.604
+   ],
    "s6": [
     0.5,
-    3.5,
-    8.16
+    3.903,
+    8.563
    ],
    "s7": [
     0.5
@@ -105,10 +113,14 @@
     1.881,
     2.821,
     2.02,
-    4.563
+    6.42
+   ],
+   "s5b": [
+    8.754,
+    4.145
    ],
    "s6": [
-    2.264,
+    3.053,
     4.31,
     4.214
    ],
@@ -120,7 +132,7 @@
     4.263
    ]
   },
-  "duration": 112.552
+  "duration": 129.261
  },
  "voice": [
   [
@@ -215,36 +227,46 @@
   ],
   [
    75.22,
-   4.56,
-   "Bên trong là cụm bơm, lưu lượng kế và bo điều khiển, giao tiếp qua cổng RS485."
+   6.42,
+   "Bên trong là mô-tơ bơm Toshiba, bộ đo lường Tatsuno hoặc Shibata và bo điều khiển, giao tiếp qua cổng RS485."
   ],
   [
-   80.98,
-   2.26,
-   "Phần mềm quản trị chạy trên máy tính và điện thoại."
+   82.84,
+   8.75,
+   "Thông số kỹ thuật: mô-tơ bơm Toshiba, bộ đo lường Tatsuno hoặc Shibata, lưu lượng từ 50 đến 70 lít mỗi phút, sai số chỉ ±0,3%."
   ],
   [
-   83.98,
+   91.94,
+   4.14,
+   "Kết nối 4G và Wi-Fi, toàn bộ dữ liệu được quản trị trên nền tảng đám mây."
+  ],
+  [
+   97.28,
+   3.05,
+   "Hệ quản trị đám mây, truy cập mọi lúc trên máy tính và điện thoại."
+  ],
+  [
+   100.69,
    4.31,
    "Quản lý nhiều công ty, nhiều chi nhánh. Đặt hạn mức theo kỳ cho từng xe và tài xế."
   ],
   [
-   88.64,
+   105.35,
    4.21,
    "Phê duyệt đề nghị, theo dõi tồn bồn, và đối soát số lít với số cơ theo từng ca."
   ],
   [
-   94.05,
+   110.76,
    4.93,
    "Từ khung tủ, lắp ráp cơ khí đến lập trình phần mềm, tất cả do Quốc Anh Gas thực hiện trọn gói."
   ],
   [
-   101.05,
+   117.76,
    3.52,
    "Chống thất thoát. Minh bạch từng lít dầu. Tiết kiệm thời gian cho đội xe."
   ],
   [
-   105.65,
+   122.36,
    4.26,
    "Quốc Anh Gas, hệ thống cấp phát nhiên liệu nội bộ thông minh. Liên hệ ngay để được tư vấn."
   ]
