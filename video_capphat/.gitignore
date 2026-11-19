@@ -1,0 +1,8 @@
+out/still_*.png
+out/music.wav
+out/part*
+out/parts.txt
+out/video_silent.mp4
+voices/*.onnx*
+out/voice*
+out/vo_cache/

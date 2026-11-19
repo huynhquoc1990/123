@@ -1,0 +1,252 @@
+{
+ "timing": {
+  "scenes": {
+   "s1": [
+    0.0,
+    11.722
+   ],
+   "s2": [
+    11.222,
+    20.229
+   ],
+   "s3": [
+    19.729,
+    39.399
+   ],
+   "s4": [
+    38.899,
+    54.361
+   ],
+   "s5": [
+    53.861,
+    80.978
+   ],
+   "s6": [
+    80.478,
+    94.052
+   ],
+   "s7": [
+    93.552,
+    101.052
+   ],
+   "s8": [
+    100.552,
+    112.552
+   ]
+  },
+  "cues": {
+   "s1": [
+    0.5,
+    4.1,
+    7.573
+   ],
+   "s2": [
+    0.6,
+    4.201
+   ],
+   "s3": [
+    0.5,
+    2.8,
+    8.307,
+    13.478
+   ],
+   "s4": [
+    0.5,
+    4.3,
+    10.5
+   ],
+   "s5": [
+    0.6,
+    5.037,
+    8.037,
+    12.183,
+    15.183,
+    18.354,
+    21.354
+   ],
+   "s6": [
+    0.5,
+    3.5,
+    8.16
+   ],
+   "s7": [
+    0.5
+   ],
+   "s8": [
+    0.5,
+    5.1
+   ]
+  },
+  "lens": {
+   "s1": [
+    3.019,
+    3.123,
+    2.949
+   ],
+   "s2": [
+    3.251,
+    3.606
+   ],
+   "s3": [
+    1.231,
+    5.157,
+    4.821,
+    4.992
+   ],
+   "s4": [
+    2.403,
+    2.543,
+    3.762
+   ],
+   "s5": [
+    4.087,
+    2.525,
+    3.796,
+    1.881,
+    2.821,
+    2.02,
+    4.563
+   ],
+   "s6": [
+    2.264,
+    4.31,
+    4.214
+   ],
+   "s7": [
+    4.934
+   ],
+   "s8": [
+    3.523,
+    4.263
+   ]
+  },
+  "duration": 112.552
+ },
+ "voice": [
+  [
+   0.5,
+   3.02,
+   "Mỗi tháng, đội xe của doanh nghiệp tiêu thụ hàng nghìn lít dầu."
+  ],
+  [
+   4.1,
+   3.12,
+   "Nhưng từng lít có được cấp đúng xe, đúng người, đúng hạn mức?"
+  ],
+  [
+   7.57,
+   2.95,
+   "Ghi sổ thủ công, bơm sai số lít, cuối ca khó đối soát."
+  ],
+  [
+   11.82,
+   3.25,
+   "Giới thiệu hệ thống cấp phát nhiên liệu nội bộ thông minh của Quốc Anh Gas."
+  ],
+  [
+   15.42,
+   3.61,
+   "Mỗi lần bơm đều có phiếu mã QR, kiểm soát hạn mức và đối soát tự động."
+  ],
+  [
+   20.23,
+   1.23,
+   "Quy trình chỉ gồm bốn bước."
+  ],
+  [
+   22.53,
+   5.16,
+   "Bước một: tài xế tạo đề nghị cấp phát trên điện thoại. Hệ thống tự kiểm tra hạn mức còn lại của từng xe."
+  ],
+  [
+   28.04,
+   4.82,
+   "Bước hai: người quản lý phê duyệt số lít ngay trên ứng dụng. Các đề nghị được tổng hợp theo biển số xe."
+  ],
+  [
+   33.21,
+   4.99,
+   "Bước ba: tài xế nhận phiếu mã QR, ghi rõ biển số, loại nhiên liệu, số lít và thời hạn hiệu lực."
+  ],
+  [
+   39.4,
+   2.4,
+   "Bước bốn: đưa mã QR vào đầu đọc trên trụ bơm."
+  ],
+  [
+   43.2,
+   2.54,
+   "Trụ tự động bơm đúng số lít đã duyệt, rồi dừng lại."
+  ],
+  [
+   49.4,
+   3.76,
+   "Biên lai được in ngay tại trụ, dữ liệu đồng bộ về máy chủ theo thời gian thực."
+  ],
+  [
+   54.46,
+   4.09,
+   "Trụ bơm thông minh được tích hợp trọn bộ trong tủ thép sơn tĩnh điện, có khóa an toàn."
+  ],
+  [
+   58.9,
+   2.53,
+   "Đầu đọc mã QR nhận phiếu cấp phát chỉ trong tích tắc."
+  ],
+  [
+   61.9,
+   3.8,
+   "Màn hình cảm ứng hiển thị số lít, thành tiền, đơn giá và tồn bồn."
+  ],
+  [
+   66.04,
+   1.88,
+   "Máy in nhiệt in biên lai cho từng lần bơm."
+  ],
+  [
+   69.04,
+   2.82,
+   "Bộ đếm số cơ, đối chiếu độc lập với số liệu điện tử."
+  ],
+  [
+   72.22,
+   2.02,
+   "Ăng ten giữ kết nối liên tục với máy chủ."
+  ],
+  [
+   75.22,
+   4.56,
+   "Bên trong là cụm bơm, lưu lượng kế và bo điều khiển, giao tiếp qua cổng RS485."
+  ],
+  [
+   80.98,
+   2.26,
+   "Phần mềm quản trị chạy trên máy tính và điện thoại."
+  ],
+  [
+   83.98,
+   4.31,
+   "Quản lý nhiều công ty, nhiều chi nhánh. Đặt hạn mức theo kỳ cho từng xe và tài xế."
+  ],
+  [
+   88.64,
+   4.21,
+   "Phê duyệt đề nghị, theo dõi tồn bồn, và đối soát số lít với số cơ theo từng ca."
+  ],
+  [
+   94.05,
+   4.93,
+   "Từ khung tủ, lắp ráp cơ khí đến lập trình phần mềm, tất cả do Quốc Anh Gas thực hiện trọn gói."
+  ],
+  [
+   101.05,
+   3.52,
+   "Chống thất thoát. Minh bạch từng lít dầu. Tiết kiệm thời gian cho đội xe."
+  ],
+  [
+   105.65,
+   4.26,
+   "Quốc Anh Gas, hệ thống cấp phát nhiên liệu nội bộ thông minh. Liên hệ ngay để được tư vấn."
+  ]
+ ]
+}

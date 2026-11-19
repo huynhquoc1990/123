@@ -1,0 +1,100 @@
+1
+00:00:00,500 --> 00:00:03,770
+Mỗi tháng, đội xe của doanh nghiệp tiêu thụ hàng nghìn lít dầu.
+
+2
+00:00:04,100 --> 00:00:07,470
+Nhưng từng lít có được cấp đúng xe, đúng người, đúng hạn mức?
+
+3
+00:00:07,570 --> 00:00:10,770
+Ghi sổ thủ công, bơm sai số lít, cuối ca khó đối soát.
+
+4
+00:00:11,820 --> 00:00:15,320
+Giới thiệu hệ thống cấp phát nhiên liệu nội bộ thông minh của Quốc Anh Gas.
+
+5
+00:00:15,420 --> 00:00:19,280
+Mỗi lần bơm đều có phiếu mã QR, kiểm soát hạn mức và đối soát tự động.
+
+6
+00:00:20,230 --> 00:00:21,710
+Quy trình chỉ gồm bốn bước.
+
+7
+00:00:22,530 --> 00:00:27,940
+Bước một: tài xế tạo đề nghị cấp phát trên điện thoại. Hệ thống tự kiểm tra hạn mức còn lại của từng xe.
+
+8
+00:00:28,040 --> 00:00:33,110
+Bước hai: người quản lý phê duyệt số lít ngay trên ứng dụng. Các đề nghị được tổng hợp theo biển số xe.
+
+9
+00:00:33,210 --> 00:00:38,450
+Bước ba: tài xế nhận phiếu mã QR, ghi rõ biển số, loại nhiên liệu, số lít và thời hạn hiệu lực.
+
+10
+00:00:39,400 --> 00:00:42,050
+Bước bốn: đưa mã QR vào đầu đọc trên trụ bơm.
+
+11
+00:00:43,200 --> 00:00:45,990
+Trụ tự động bơm đúng số lít đã duyệt, rồi dừng lại.
+
+12
+00:00:49,400 --> 00:00:53,410
+Biên lai được in ngay tại trụ, dữ liệu đồng bộ về máy chủ theo thời gian thực.
+
+13
+00:00:54,460 --> 00:00:58,800
+Trụ bơm thông minh được tích hợp trọn bộ trong tủ thép sơn tĩnh điện, có khóa an toàn.
+
+14
+00:00:58,900 --> 00:01:01,680
+Đầu đọc mã QR nhận phiếu cấp phát chỉ trong tích tắc.
+
+15
+00:01:01,900 --> 00:01:05,950
+Màn hình cảm ứng hiển thị số lít, thành tiền, đơn giá và tồn bồn.
+
+16
+00:01:06,040 --> 00:01:08,170
+Máy in nhiệt in biên lai cho từng lần bơm.
+
+17
+00:01:09,040 --> 00:01:12,110
+Bộ đếm số cơ, đối chiếu độc lập với số liệu điện tử.
+
+18
+00:01:12,220 --> 00:01:14,490
+Ăng ten giữ kết nối liên tục với máy chủ.
+
+19
+00:01:15,220 --> 00:01:20,030
+Bên trong là cụm bơm, lưu lượng kế và bo điều khiển, giao tiếp qua cổng RS485.
+
+20
+00:01:20,980 --> 00:01:23,490
+Phần mềm quản trị chạy trên máy tính và điện thoại.
+
+21
+00:01:23,980 --> 00:01:28,540
+Quản lý nhiều công ty, nhiều chi nhánh. Đặt hạn mức theo kỳ cho từng xe và tài xế.
+
+22
+00:01:28,640 --> 00:01:33,100
+Phê duyệt đề nghị, theo dõi tồn bồn, và đối soát số lít với số cơ theo từng ca.
+
+23
+00:01:34,050 --> 00:01:39,230
+Từ khung tủ, lắp ráp cơ khí đến lập trình phần mềm, tất cả do Quốc Anh Gas thực hiện trọn gói.
+
+24
+00:01:41,050 --> 00:01:44,820
+Chống thất thoát. Minh bạch từng lít dầu. Tiết kiệm thời gian cho đội xe.
+
+25
+00:01:45,650 --> 00:01:50,160
+Quốc Anh Gas, hệ thống cấp phát nhiên liệu nội bộ thông minh. Liên hệ ngay để được tư vấn.
+

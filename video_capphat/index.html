@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Cấp phát nhiên liệu nội bộ – Video</title>
+<style>
+:root{--bg:#06111f;--panel:#0c1b2f;--line:#1f3756;--blue:#1e88e5;--cyan:#38bdf8;--green:#4ade80;--pink:#f472b6;--amber:#fbbf24;--red:#f87171;--text:#eaf2ff;--muted:#93a9c6}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
+canvas#bg{position:absolute;inset:0}
+.scene{position:absolute;inset:0;opacity:0;display:none}
+.a{position:absolute;will-change:transform,opacity;opacity:0}
+.cam{position:absolute;left:0;top:0;transform-origin:0 0;max-width:none}
+.ov{font-size:22px;letter-spacing:.28em;font-weight:700;color:var(--cyan);text-transform:uppercase}
+.muted{color:var(--muted)}
+.grad{background:linear-gradient(90deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border:1.5px solid rgba(56,189,248,.45);border-radius:999px;font-size:24px;font-weight:600;color:#d3efff;background:rgba(56,189,248,.08);margin:0 10px 12px 0}
+.card{background:linear-gradient(160deg,rgba(19,38,64,.94),rgba(9,21,38,.94));border:1.5px solid var(--line);border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.photo{overflow:hidden;border-radius:26px;border:2px solid rgba(255,255,255,.1);box-shadow:0 30px 80px rgba(0,0,0,.6);background:#0a1626}
+.center{left:0;width:1920px;text-align:center}
+/* phone */
+.phone{width:432px;height:836px;padding:14px;border-radius:58px;background:linear-gradient(145deg,#1c2634,#05080d);border:2px solid #34445a;box-shadow:0 40px 90px rgba(0,0,0,.65),inset 0 0 0 2px #0b1018}
+.phone .scr{position:relative;width:400px;height:804px;border-radius:44px;overflow:hidden;background:#f3f6fa}
+.phone .scr img{position:absolute;left:0;top:0;width:400px}
+.phone .scr .notch{position:absolute;left:150px;top:10px;width:100px;height:28px;border-radius:14px;background:#05080d;z-index:3}
+.hl{position:absolute;border:4px solid var(--amber);border-radius:18px;box-shadow:0 0 0 2000px rgba(5,10,20,.35),0 0 26px rgba(251,191,36,.8);opacity:0;z-index:2}
+/* rail */
+#rail{left:360px;top:42px;width:1200px;height:120px}
+#rail .ln{position:absolute;left:100px;top:27px;width:1000px;height:4px;border-radius:2px;background:#1f3756}
+#rail .ln i{display:block;height:100%;width:0;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--green))}
+#rail .nd{position:absolute;top:0;width:200px;text-align:center}
+#rail .nd b{display:flex;margin:0 auto;width:58px;height:58px;border-radius:50%;align-items:center;justify-content:center;font-size:26px;font-weight:800;background:#0c1b2f;border:3px solid #2a4568;color:#7f98b8}
+#rail .nd span{display:block;margin-top:10px;font-size:22px;font-weight:600;color:#7f98b8}
+#rail .nd.on b{background:linear-gradient(135deg,#0ea5e9,#22c55e);border-color:transparent;color:#fff;box-shadow:0 0 24px rgba(56,189,248,.7)}
+#rail .nd.on span{color:#fff}
+#rail .nd.done b{border-color:var(--green);color:var(--green)}
+/* step card */
+.step{left:1010px;top:250px;width:800px}
+.step .n{font-size:24px;font-weight:800;letter-spacing:.25em;color:var(--cyan)}
+.step .t{font-size:68px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:14px 0 30px}
+.bul{display:flex;align-items:flex-start;gap:18px;font-size:31px;line-height:1.3;margin-bottom:22px;color:#d6e4f7}
+.bul svg{flex:none;margin-top:2px}
+.kpi{margin-top:30px;padding:24px 30px}
+.kpi .l{font-size:21px;color:var(--muted)}
+.kpi .v{font-size:52px;font-weight:800;margin-top:6px;font-variant-numeric:tabular-nums}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px}
+.tgrid div{padding:18px 24px;border-radius:18px;background:rgba(30,136,229,.14);border:1.5px solid rgba(56,189,248,.35)}
+.tgrid small{display:block;font-size:20px;color:var(--muted)}
+.tgrid b{display:block;font-size:34px;font-weight:800;margin-top:4px}
+/* HMI */
+#hmi{left:930px;top:225px;width:880px;height:528px;border-radius:20px;background:#1b1f25;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.6);border:3px solid #9aa4b1}
+#hmi .sc{width:100%;height:100%;border-radius:6px;overflow:hidden;background:#dfe9f5;position:relative;font-family:'Inter',sans-serif;color:#0f2a4a}
+#hmi .hd{height:52px;background:linear-gradient(90deg,#0d5bb5,#1976d2);color:#fff;display:flex;align-items:center;padding:0 20px;font-size:22px;font-weight:700;gap:14px}
+#hmi .hd .qa{font-style:italic;font-weight:900;color:#a7f3d0}
+#hmi .hd .on{margin-left:auto;font-size:19px;font-weight:600}
+#hmi .hd .on i{display:inline-block;width:10px;height:10px;border-radius:50%;background:#4ade80;margin-right:8px}
+#hmi .lp{position:absolute;left:14px;top:66px;width:600px;height:384px;background:#fff;border-radius:10px;border:1.5px solid #c5d4e6}
+#hmi .lb{font-size:17px;font-weight:700;color:#3b5578;letter-spacing:.04em}
+#hmi .lb small{font-weight:500;color:#8aa0bc;margin-left:8px}
+#hmi .dg{font-variant-numeric:tabular-nums;font-weight:800;text-align:right;letter-spacing:.02em;line-height:1}
+#hmi .rp{position:absolute;left:628px;top:66px;width:186px}
+#hmi .btn{height:150px;border-radius:12px;background:linear-gradient(160deg,#1e88e5,#0d5bb5);color:#fff;text-align:center;padding-top:18px}
+#hmi .btn b{display:block;font-size:26px;font-weight:900;margin-top:8px}
+#hmi .btn small{font-size:14px;opacity:.85}
+#hmi .bx{margin-top:12px;background:#fff;border-radius:10px;border:1.5px solid #c5d4e6;padding:10px 14px}
+#hmi .bx .lb{font-size:14px}
+#hmi .bx .v{font-size:24px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+#flow{left:930px;top:790px;width:880px}
+#flow .bar{height:22px;border-radius:11px;background:#14283f;overflow:hidden;border:1.5px solid #24456b}
+#flow .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0ea5e9,#22c55e)}
+/* receipt */
+#rcpt{left:1000px;top:205px;width:430px;height:0;overflow:hidden;filter:drop-shadow(0 20px 40px rgba(0,0,0,.6))}
+#rcpt .pp{width:430px;background:#fbfbf7;color:#1b1b1b;font-family:'DejaVu Sans Mono',monospace;font-size:19px;line-height:1.55;padding:26px 28px 34px}
+#rcpt .pp .c{text-align:center;font-weight:700}
+#rcpt .pp hr{border:none;border-top:2px dashed #888;margin:10px 0}
+#rcpt .pp .r{display:flex;justify-content:space-between}
+#slot{left:985px;top:190px;width:460px;height:22px;border-radius:11px;background:#0a0f16;border:2px solid #3a4b61}
+/* tour */
+#tourImg,#tourImg2{position:absolute;left:0;top:0;transform-origin:0 0;max-width:none}
+#tourFade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,17,31,0) 0%,rgba(6,17,31,0) 52%,rgba(6,17,31,.88) 64%,rgba(6,17,31,.97) 100%)}
+.ring{position:absolute;border-radius:50%;border:4px solid var(--cyan);box-shadow:0 0 30px rgba(56,189,248,.7),inset 0 0 30px rgba(56,189,248,.35);opacity:0}
+.tcard{left:1230px;top:200px;width:610px;padding:44px 46px}
+.tcard .idx{font-size:21px;font-weight:700;letter-spacing:.24em;color:var(--cyan)}
+.tcard .ic{width:86px;height:86px;border-radius:24px;display:flex;align-items:center;justify-content:center;background:rgba(56,189,248,.12);border:1.5px solid rgba(56,189,248,.4);margin:22px 0}
+.tcard .tt{font-size:54px;font-weight:800;letter-spacing:-.02em;line-height:1.08}
+.tcard .dd{font-size:28px;line-height:1.45;color:#c6d6ec;margin:22px 0 26px}
+.pin{display:flex;align-items:center;gap:12px;padding:10px 18px;border-radius:14px;background:rgba(6,17,31,.88);border:1.5px solid var(--cyan);font-size:23px;font-weight:700;white-space:nowrap}
+.pin i{width:14px;height:14px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+/* features */
+.feat{width:400px;height:178px;padding:24px 26px;display:flex;gap:20px}
+.feat .fi{flex:none;width:68px;height:68px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:rgba(56,189,248,.12);border:1.5px solid rgba(56,189,248,.4)}
+.feat b{display:block;font-size:27px;line-height:1.15}
+.feat span{display:block;font-size:20px;line-height:1.35;color:var(--muted);margin-top:8px}
+/* workshop */
+.wk{width:500px;height:640px}
+.wk img{width:100%;height:100%;object-fit:cover}
+.wk .cap{position:absolute;left:0;right:0;bottom:0;padding:70px 28px 24px;background:linear-gradient(transparent,rgba(4,10,20,.92));font-size:30px;font-weight:800}
+.wk .cap small{display:block;font-size:20px;letter-spacing:.2em;color:var(--cyan);margin-bottom:6px}
+/* end */
+.pillar{width:460px;text-align:center}
+.pillar .pi{width:130px;height:130px;margin:0 auto 26px;border-radius:36px;display:flex;align-items:center;justify-content:center;background:rgba(56,189,248,.1);border:1.5px solid rgba(56,189,248,.45)}
+.pillar .pt{font-size:42px;font-weight:800;line-height:1.15}
+.pillar .ps{font-size:25px;color:var(--muted);margin-top:10px}
+.logo{background:#fff;border-radius:22px;display:inline-block;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.logo img{display:block}
+#wm{right:34px;top:28px;padding:6px 8px;border-radius:14px}
+#black{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.pain{width:470px;padding:40px 30px;text-align:center;border-color:rgba(248,113,113,.4)}
+.pain .pi{position:relative;width:120px;height:120px;margin:0 auto 24px;border-radius:34px;display:flex;align-items:center;justify-content:center;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.45)}
+.pain .x{position:absolute;right:-14px;top:-14px;width:46px;height:46px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center}
+.pain b{font-size:38px;font-weight:800}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="bg" width="1920" height="1080"></canvas>
+  <section class="scene" id="s1"></section>
+  <section class="scene" id="s2"></section>
+  <section class="scene" id="s3"></section>
+  <section class="scene" id="s4"></section>
+  <section class="scene" id="s5"></section>
+  <section class="scene" id="s6"></section>
+  <section class="scene" id="s7"></section>
+  <section class="scene" id="s8"></section>
+  <div class="a" id="rail"></div>
+  <div class="a logo" id="wm"><img src="assets/logo_qa.png" style="height:64px"></div>
+  <div id="black"></div>
+</div>
+<script src="timing.js"></script>
+<script>
+// Contact line shown on the last screen (leave empty to hide), e.g. 'Hotline/Zalo: 09xx xxx xxx'
+const CONTACT='';
+
+// ===================== helpers =====================
+const $=id=>document.getElementById(id);
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,p)=>a+(b-a)*p;
+const eo=p=>1-Math.pow(1-p,3);
+const eob=p=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
+const eio=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+const prog=(t,s,d)=>clamp((t-s)/d);
+function st(el,o,x=0,y=0,s=1,r=0){el.style.opacity=o.toFixed(3);el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${s.toFixed(4)}) rotate(${r.toFixed(2)}deg)`}
+// fade/slide in at a, optional exit at out
+function up(el,t,a,o={}){const d=o.d??.7,dy=o.dy??36,dx=o.dx??0,s0=o.s0??1,out=o.out??1e9,od=o.od??.4,oy=o.oy??-24,ox=o.ox??0,ease=o.ease??eo;
+  const pi=ease(prog(t,a,d)),po=eio(prog(t,out,od));st(el,clamp(prog(t,a,d)*1.4)*(1-po),dx*(1-pi)+ox*po,dy*(1-pi)+oy*po,lerp(s0,1,pi),o.r??0)}
+function cam(el,fx,fy,s,cx,cy){el.style.transform=`translate(${(cx-fx*s).toFixed(1)}px,${(cy-fy*s).toFixed(1)}px) scale(${s.toFixed(4)})`}
+function camAt(keys,t){ // keys: [[time,fx,fy,s],...] eased between consecutive keys
+  if(t<=keys[0][0])return keys[0].slice(1);
+  for(let i=1;i<keys.length;i++){const[a,...A]=keys[i-1],[b,...B]=keys[i];if(t<b){const p=eio(clamp((t-a)/(b-a)));return A.map((v,k)=>lerp(v,B[k],p))}}
+  return keys[keys.length-1].slice(1)}
+const vn=(v,d=0)=>v.toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d});
+function add(parent,html){parent.insertAdjacentHTML('beforeend',html);return parent.lastElementChild}
+const IC={
+fuel:'<path d="M3 22h12M4 9h10M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V9.8a2 2 0 0 0-.6-1.4L18 5"/>',
+drop:'<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
+qr:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>',
+phone:'<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
+check:'<path d="M20 6 9 17l-5-5"/>',
+checkc:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+truck:'<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+chart:'<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+building:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3"/>',
+book:'<path d="M4 4h11a3 3 0 0 1 3 3v14H7a3 3 0 0 1-3-3z"/><path d="M8 8h6M8 12h6"/>',
+x:'<path d="M18 6 6 18M6 6l12 12"/>',
+cloud:'<path d="M7 18a5 5 0 0 1-.6-9.96A6.5 6.5 0 0 1 18.5 9.5 4.3 4.3 0 0 1 17.5 18z"/>',
+printer:'<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/>',
+screen:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+counter:'<rect x="3" y="7" width="18" height="10" rx="1.5"/><path d="M7.5 7v10M12 7v10M16.5 7v10"/>',
+antenna:'<path d="M12 10v11M9 21h6"/><circle cx="12" cy="8" r="2"/><path d="M7.8 3.8a6 6 0 0 0 0 8.4M16.2 3.8a6 6 0 0 1 0 8.4"/>',
+lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+receipt:'<path d="M5 3h14v18l-2.5-1.5L14 21l-2-1.5L10 21l-2.5-1.5L5 21z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+sync:'<path d="M21 12a9 9 0 0 1-15.5 6.2M3 12A9 9 0 0 1 18.5 5.8"/><path d="M21 4v5h-5M3 20v-5h5"/>',
+tank:'<rect x="5" y="3" width="14" height="18" rx="3"/><path d="M5 13h14"/>',
+gauge:'<path d="M3.5 17a8.5 8.5 0 1 1 17 0"/><path d="M12 17l4.5-5.5"/><circle cx="12" cy="17" r="1.3"/>',
+chip:'<rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M9.5 3v4M14.5 3v4M9.5 17v4M14.5 17v4M3 9.5h4M3 14.5h4M17 9.5h4M17 14.5h4"/>',
+tool:'<path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3z"/><path d="M14.5 6.5 17 4l3 3-2.5 2.5"/>',
+eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>'
+};
+const icon=(n,sz=48,c='currentColor',w=1.8)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+const phone=(imgs)=>`<div class="a phone"><div class="scr"><div class="notch"></div>${imgs.map(s=>`<img src="assets/${s}">`).join('')}</div></div>`;
+
+// ===================== timeline =====================
+const TM=window.TIMING;
+const SCENES=Object.entries(TM.scenes).map(([k,[a,b]])=>[k,a,b]);
+const C=TM.cues, LN=TM.lens;
+window.DURATION=TM.duration;
+const UPD={};
+
+// ===================== background =====================
+const cv=$('bg'),cx=cv.getContext('2d');
+const PARTS=[...Array(60)].map((_,i)=>({x:(i*397.3)%1920,y:(i*613.7)%1080,v:8+(i*7)%23,r:1+(i%3)*.7,ph:i*1.7}));
+function drawBg(t){
+  cx.fillStyle='#06111f';cx.fillRect(0,0,1920,1080);
+  const g1=cx.createRadialGradient(420+200*Math.sin(t*.13),300+120*Math.cos(t*.11),0,420,300,950);
+  g1.addColorStop(0,'rgba(30,136,229,0.18)');g1.addColorStop(1,'rgba(30,136,229,0)');cx.fillStyle=g1;cx.fillRect(0,0,1920,1080);
+  const g2=cx.createRadialGradient(1550+150*Math.cos(t*.09),850+100*Math.sin(t*.15),0,1550,850,900);
+  g2.addColorStop(0,'rgba(74,222,128,0.09)');g2.addColorStop(1,'rgba(74,222,128,0)');cx.fillStyle=g2;cx.fillRect(0,0,1920,1080);
+  cx.strokeStyle='rgba(120,170,230,0.055)';cx.lineWidth=1;const off=(t*12)%60;
+  cx.beginPath();for(let x=-60+off;x<1920;x+=60){cx.moveTo(x,0);cx.lineTo(x,1080)}for(let y=-60+off;y<1080;y+=60){cx.moveTo(0,y);cx.lineTo(1920,y)}cx.stroke();
+  for(const p of PARTS){const y=(p.y-t*p.v+1080*10)%1080;const a=.22+.22*Math.sin(t*1.3+p.ph);cx.fillStyle=`rgba(140,210,255,${a})`;cx.beginPath();cx.arc(p.x,y,p.r,0,7);cx.fill()}
+  // intro: flowing fuel lines
+  const e1=TM.scenes.s1[1];
+  if(t<e1){const a=clamp(t/1)*(1-clamp((t-(e1-.8))/.8));
+    for(let k=0;k<3;k++){cx.beginPath();const col=['56,189,248','251,191,36','74,222,128'][k];
+      cx.strokeStyle=`rgba(${col},${.5*a})`;cx.lineWidth=2.5;cx.shadowColor=`rgba(${col},.8)`;cx.shadowBlur=14;
+      const drawTo=1920*eo(clamp(t/2.4));
+      for(let x=0;x<=drawTo;x+=6){const y=860+50*Math.sin(x/1920*Math.PI*5+t*2.2+k*2.094)*Math.sin(Math.PI*x/1920);x?cx.lineTo(x,y):cx.moveTo(x,y)}cx.stroke()}
+    cx.shadowBlur=0}
+}
+
+// ===================== S1 hook =====================
+(()=>{const s=$('s1'),c=C.s1;
+ const a=add(s,'<div class="a center" style="top:300px;font-size:54px;font-weight:600">Mỗi tháng, đội xe của doanh nghiệp tiêu thụ</div>');
+ const n=add(s,'<div class="a center" style="top:390px;font-size:150px;font-weight:800;color:var(--amber);letter-spacing:-.03em;font-variant-numeric:tabular-nums"><span>0</span> <span style="font-size:80px">lít</span></div>');
+ const ns=n.querySelector('span');
+ const a2=add(s,'<div class="a center" style="top:590px;font-size:44px;font-weight:600;color:var(--muted)">hàng nghìn lít dầu — mỗi lít là chi phí.</div>');
+ const q=add(s,'<div class="a center" style="top:330px;font-size:58px;font-weight:600">Nhưng từng lít có được cấp</div>');
+ const w=add(s,'<div class="a center" style="top:430px;font-size:96px;font-weight:800;letter-spacing:-.02em;opacity:1"><span style="display:inline-block;color:var(--cyan)">đúng xe</span><span style="display:inline-block;color:#4b6488;margin:0 24px">·</span><span style="display:inline-block;color:var(--green)">đúng người</span><span style="display:inline-block;color:#4b6488;margin:0 24px">·</span><span style="display:inline-block;color:var(--amber)">đúng hạn mức?</span></div>');
+ const ws=[...w.children];
+ const pains=[['book','Ghi sổ thủ công'],['drop','Bơm sai số lít'],['chart','Cuối ca khó đối soát']].map(([i,tx],k)=>
+   add(s,`<div class="a card pain" style="left:${185+k*530}px;top:330px"><div class="pi">${icon(i,64,'#fca5a5')}<div class="x">${icon('x',28,'#fff',3)}</div></div><b>${tx}</b></div>`));
+ UPD.s1=t=>{
+  up(a,t,c[0]-.2,{out:c[1]-.5});up(n,t,c[0]+.2,{s0:.85,out:c[1]-.5,ease:eob});up(a2,t,c[0]+1.4,{out:c[1]-.5});
+  ns.textContent=vn(Math.round(12500*eo(prog(t,c[0]+.2,2.4))/10)*10);
+  up(q,t,c[1]-.1,{out:c[2]-.5});ws.forEach((e,i)=>{const k=i>>1;up(e,t,c[1]+.6+k*.7,{dy:50,s0:.8,ease:eob,out:c[2]-.5})});
+  pains.forEach((p,i)=>up(p,t,c[2]+i*.85,{dy:60,s0:.9,ease:eob}));
+ };
+})();
+
+// ===================== S2 reveal =====================
+(()=>{const s=$('s2'),c=C.s2;
+ const ph=add(s,'<div class="a photo" style="left:150px;top:110px;width:660px;height:860px"><img class="cam" src="assets/hero.jpg"></div>');const img=ph.querySelector('img');
+ const o=add(s,'<div class="a ov" style="left:900px;top:205px">Quốc Anh Gas &nbsp;·&nbsp; Giải pháp nhiên liệu</div>');
+ const h=add(s,'<div class="a" style="left:895px;top:260px;font-size:88px;font-weight:800;letter-spacing:-.03em;line-height:1.05">Hệ thống cấp phát</div>');
+ const h2=add(s,'<div class="a grad" style="left:895px;top:355px;font-size:88px;font-weight:800;letter-spacing:-.03em;line-height:1.1">nhiên liệu nội bộ</div>');
+ const h3=add(s,'<div class="a" style="left:895px;top:455px;font-size:88px;font-weight:800;letter-spacing:-.03em;line-height:1.05">thông minh</div>');
+ const p=add(s,'<div class="a muted" style="left:900px;top:590px;width:900px;font-size:32px;line-height:1.45">Trụ bơm đọc phiếu QR · phần mềm quản lý hạn mức · đối soát tự động theo ca.</div>');
+ const chips=add(s,'<div class="a" style="left:900px;top:730px;width:920px;opacity:1"></div>');
+ [['qr','Phiếu QR'],['gauge','Hạn mức theo xe'],['checkc','Phê duyệt online'],['receipt','In biên lai'],['sync','Đồng bộ máy chủ']].forEach(([i,x])=>add(chips,`<span class="chip">${icon(i,26,'#7dd3fc',2)}${x}</span>`));
+ const cs=[...chips.children];
+ UPD.s2=t=>{st(ph,clamp(t/.8),lerp(-60,0,eo(clamp(t/1.2))));cam(img,945,1360,lerp(.345,.38,t/10),330,430);
+  up(o,t,.3,{dx:-30,dy:0});up(h,t,.5,{dy:50});up(h2,t,.75,{dy:50});up(h3,t,1.0,{dy:50});up(p,t,1.6);
+  cs.forEach((e,i)=>up(e,t,c[1]+.2+i*.3,{dy:20,s0:.85,ease:eob}))};
+})();
+
+// ===================== process rail (S3 + S4) =====================
+const RAIL=['Đề nghị','Phê duyệt','Phiếu QR','Bơm tại trụ'];
+const rail=$('rail');rail.innerHTML='<div class="ln"><i></i></div>'+RAIL.map((x,i)=>`<div class="nd" style="left:${i*333.3}px"><b>${i+1}</b><span>${x}</span></div>`).join('');
+const RN=[...rail.querySelectorAll('.nd')],RL=rail.querySelector('.ln i');
+function railActive(t){ // global time -> active step (0..4, fractional for the line)
+  const s3=TM.scenes.s3[0],s4=TM.scenes.s4[0];
+  const marks=[s3+C.s3[1]-.2,s3+C.s3[2]-.2,s3+C.s3[3]-.2,s4+C.s4[0]-.2];
+  let k=-1;marks.forEach((m,i)=>{if(t>=m)k=i});return {k,marks}}
+function drawRail(t){const a=TM.scenes.s3[0],b=TM.scenes.s4[1];
+  if(t<a-.1||t>b){rail.style.opacity=0;return}
+  st(rail,clamp((t-a-.3)/.6)*(1-clamp((t-(b-.6))/.5)),0,lerp(-30,0,eo(prog(t,a+.3,.7))));
+  const {k,marks}=railActive(t);
+  RN.forEach((n,i)=>{n.classList.toggle('on',i===k);n.classList.toggle('done',i<k)});
+  const prev=k<=0?0:(k-1)/3,cur=k<0?0:k/3;
+  RL.style.width=(lerp(prev,cur,eo(clamp((t-(marks[k]??0))/.7)))*100).toFixed(2)+'%';
+}
+
+// ===================== S3 app steps =====================
+(()=>{const s=$('s3'),c=C.s3;
+ const t1=add(s,'<div class="a center ov" style="top:380px;font-size:26px">Quy trình cấp phát</div>');
+ const t2=add(s,'<div class="a center" style="top:430px;font-size:110px;font-weight:800;letter-spacing:-.03em">4 bước <span class="grad">khép kín</span></div>');
+ const ph=add(s,phone(['app_home.jpg','app_tong_hop.jpg','app_qr.jpg']));ph.style.left='470px';ph.style.top='200px';
+ const imgs=[...ph.querySelectorAll('img')];const scr=ph.querySelector('.scr');
+ // highlight boxes as fractions of the screenshot [x0,y0,x1,y1]
+ const HL=[[.035,.2,.965,.35],[.03,.165,.97,.51],[.17,.37,.83,.695]];
+ const hls=HL.map(([x0,y0,x1,y1])=>add(scr,`<div class="hl" style="left:${x0*400}px;top:${y0*804}px;width:${(x1-x0)*400}px;height:${(y1-y0)*804}px"></div>`));
+ const B=(i,x)=>`<div class="bul">${icon(i,40,'#38bdf8',2)}<span>${x}</span></div>`;
+ const cards=[
+  add(s,`<div class="a step"><div class="n">BƯỚC 1 · TÀI XẾ</div><div class="t">Tạo đề nghị<br><span class="grad">cấp phát</span></div>${B('truck','Chọn xe, nhập số lít cần cấp')}${B('gauge','Hệ thống tự kiểm tra hạn mức còn lại')}${B('phone','Thiếu hạn mức? Xin tăng ngay trên app')}<div class="card kpi"><div class="l">Hạn mức tháng 11/2026 · 77H2-180.34</div><div class="v"><span style="color:var(--green)">44,81</span> <span class="muted" style="font-size:34px">/ 530 L còn lại</span></div></div></div>`),
+  add(s,`<div class="a step"><div class="n">BƯỚC 2 · QUẢN LÝ</div><div class="t">Phê duyệt<br><span class="grad">trên điện thoại</span></div>${B('checkc','Duyệt / từ chối chỉ với một chạm')}${B('truck','Tổng hợp đề nghị theo biển số xe')}${B('chart','Theo dõi lít đề nghị – lít duyệt – đã dùng')}</div>`),
+  add(s,`<div class="a step"><div class="n">BƯỚC 3 · TÀI XẾ</div><div class="t">Nhận phiếu<br><span class="grad">mã QR</span></div><div class="tgrid"><div><small>Biển số</small><b>77H2-180.34</b></div><div><small>Nhiên liệu</small><b>DO 0,05S</b></div><div><small>Số lít</small><b style="color:var(--green)">18,5 L</b></div><div><small>Hiệu lực đến</small><b>30/11/2026</b></div></div>${B('qr','Trạng thái phiếu: chờ bơm · đã sử dụng · hết hạn')}</div>`)];
+ UPD.s3=t=>{
+  up(t1,t,c[0]-.2,{out:c[1]-.7});up(t2,t,c[0],{s0:.9,ease:eob,out:c[1]-.7});
+  const pe=eo(prog(t,c[1]-.5,.9));st(ph,clamp(prog(t,c[1]-.5,.6)),lerp(-120,0,pe),lerp(80,0,pe),1,lerp(-6,0,pe));
+  imgs.forEach((im,i)=>{const a=i?clamp(prog(t,c[i+1]-.35,.5)):1;im.style.opacity=a.toFixed(3)});
+  // gentle scroll on the summary screenshot
+  imgs.forEach((im,i)=>{im.style.transform='translateY(0px)'});
+  hls.forEach((h,i)=>{const a=c[i+1]+1.1,b=i<2?c[i+2]-.4:1e9;const o=clamp(prog(t,a,.4))*(1-clamp(prog(t,b,.3)));h.style.opacity=o.toFixed(3);h.style.transform=`scale(${lerp(1.12,1,eob(prog(t,a,.5))).toFixed(3)})`});
+  cards.forEach((e,i)=>up(e,t,c[i+1]-.1,{dx:60,dy:0,out:i<2?c[i+2]-.45:1e9,oy:0,ox:-50}));
+ };
+})();
+
+// ===================== S4 pump in action =====================
+(()=>{const s=$('s4'),c=C.s4;
+ const card=add(s,'<div class="a photo" style="left:110px;top:200px;width:720px;height:830px"><img class="cam" src="assets/hero.jpg"><img class="cam" src="assets/print.jpg" style="opacity:0"></div>');
+ const [ih,ip]=card.querySelectorAll('img');
+ const glow=add(card,'<div class="ring" style="width:260px;height:260px;border-color:#4ade80"></div>');
+ const pill=add(card,'<div class="a" style="left:24px;top:24px;padding:10px 20px;border-radius:999px;background:rgba(6,17,31,.85);border:1.5px solid var(--cyan);font-size:22px;font-weight:700"></div>');
+ // phase A: phone with QR ticket
+ const ph=add(s,phone(['app_qr.jpg']));ph.style.left='1150px';ph.style.top='210px';
+ const pim=ph.querySelector('img');pim.style.transform='translateY(-160px)';
+ const beam=add(ph.querySelector('.scr'),'<div style="position:absolute;left:50px;width:300px;height:5px;background:#4ade80;box-shadow:0 0 18px 4px rgba(74,222,128,.8);opacity:0;z-index:4"></div>');
+ const ok=add(s,`<div class="a card" style="left:1060px;top:880px;padding:20px 30px;display:flex;align-items:center;gap:18px;border-color:rgba(74,222,128,.6)">${icon('checkc',44,'#4ade80',2.2)}<div><div style="font-size:28px;font-weight:800">Đã nhận phiếu</div><div class="muted" style="font-size:21px">DON-2611181143-001 · 77H2-180.34 · 18,5 L</div></div></div>`);
+ // phase B: HMI replica
+ const hmi=add(s,`<div class="a" id="hmi"><div class="sc">
+  <div class="hd"><span class="qa">QA</span>SHB-01 · Vòi 1 · DO_0.05S<span class="on"><i></i>Online &nbsp; 18:05:12</span></div>
+  <div class="lp">
+    <div style="padding:10px 18px;border-bottom:1.5px solid #e1e9f3;font-size:16px;color:#5a7393">Phiếu: <b style="color:#0f2a4a">DON-2611181143-001</b> · 77H2-180.34</div>
+    <div style="padding:12px 18px 0"><div class="lb">THÀNH TIỀN<small>đồng</small></div><div class="dg" id="hm" style="font-size:84px;color:#0f2a4a">0</div></div>
+    <div style="margin:10px 0 0;padding:12px 18px 0;border-top:1.5px solid #e1e9f3;background:#f1f6fc;height:170px"><div class="lb">SỐ LÍT<small>lít</small></div><div class="dg" id="hl" style="font-size:100px;color:#0d5bb5">0.000</div></div>
+    <div id="hs" style="position:absolute;left:18px;bottom:10px;font-size:16px;font-weight:600;color:#16a34a">● Sẵn sàng</div>
+  </div>
+  <div class="rp"><div class="btn">${icon('qr',44,'#fff',2)}<b>CẤP PHÁT</b><small>Bấm để hiện mã quét</small></div>
+   <div class="bx"><div class="lb">ĐƠN GIÁ</div><div class="v">25.660 <small style="font-size:14px;color:#8aa0bc">đ/L</small></div></div>
+   <div class="bx"><div class="lb">TỒN BỒN <span id="hp" style="float:right;color:#16a34a">52%</span></div><div class="v" id="ht">5.200 L</div></div></div>
+ </div></div>`);
+ const hm=$('hm'),hlv=$('hl'),hs=$('hs'),ht=$('ht');
+ const flow=add(s,`<div class="a" id="flow"><div style="display:flex;justify-content:space-between;font-size:24px;font-weight:600;margin-bottom:12px"><span id="fl1">Đang bơm theo phiếu…</span><span class="muted">Đã duyệt: 18,5 L</span></div><div class="bar"><i></i></div></div>`);
+ const fbar=flow.querySelector('i'),fl1=$('fl1');
+ // phase C: receipt + sync
+ const slot=add(s,'<div class="a" id="slot"></div>');
+ const rc=add(s,`<div class="a" id="rcpt" style="opacity:1"><div class="pp">
+  <div class="c">QUỐC ANH GAS</div><div class="c" style="font-weight:400">PHIẾU CẤP PHÁT NHIÊN LIỆU</div><hr>
+  <div class="r"><span>Mã phiếu</span><span>…143-001</span></div><div class="r"><span>Biển số</span><span>77H2-180.34</span></div>
+  <div class="r"><span>Trụ/Vòi</span><span>SHB-01 / 1</span></div><div class="r"><span>Nhiên liệu</span><span>DO_0.05S</span></div><hr>
+  <div class="r"><span>Số lít</span><b>18,500 L</b></div><div class="r"><span>Đơn giá</span><span>25.660</span></div><div class="r"><span>Thành tiền</span><b>474.710 đ</b></div><hr>
+  <div class="c" style="font-weight:400">18/11/2026 18:05</div></div></div>`);
+ const sync=add(s,`<div class="a card" style="left:1490px;top:250px;width:340px;padding:30px 28px;text-align:center">
+  <div style="width:96px;height:96px;margin:0 auto 18px;border-radius:28px;display:flex;align-items:center;justify-content:center;background:rgba(74,222,128,.12);border:1.5px solid rgba(74,222,128,.5)">${icon('cloud',54,'#4ade80')}</div>
+  <div style="font-size:30px;font-weight:800">Đã đồng bộ<br>máy chủ</div><div class="muted" style="font-size:20px;margin-top:10px">thời gian thực</div></div>`);
+ const sync2=add(s,`<div class="a card" style="left:1490px;top:600px;width:340px;padding:24px 28px">
+  <div class="muted" style="font-size:20px">Hạn mức xe còn lại</div><div style="font-size:40px;font-weight:800;margin:4px 0 16px"><span style="color:var(--green)">26,31</span> L</div>
+  <div class="muted" style="font-size:20px">Tồn bồn</div><div style="font-size:40px;font-weight:800;margin-top:4px">5.181,5 L</div></div>`);
+ const P0=c[1]+.7,PD=4.6; // pumping start / duration
+ UPD.s4=t=>{
+  st(card,clamp(t/.6),lerp(-60,0,eo(clamp(t/1))));
+  const k=camAt([[0,960,1300,.38],[1.8,998,620,.95],[c[1]-.5,998,620,1.0],[c[1]+.5,938,1352,.78],[c[2]-.3,938,1352,.8]],t);
+  cam(ih,k[0],k[1],k[2],360,415);
+  const pc=clamp(prog(t,c[2]-.4,.6));ip.style.opacity=pc.toFixed(3);cam(ip,624,880,lerp(.78,.86,clamp((t-c[2])/4)),360,415);
+  // reader glow when the ticket is scanned
+  const scanT=c[0]+2.1;const g=clamp(prog(t,scanT+.5,.25))*(1-clamp(prog(t,c[1]-.6,.4)));
+  glow.style.opacity=g.toFixed(3);glow.style.transform=`translate(${(360-130+(998-k[0])*k[2]).toFixed(1)}px,${(415-130+(560-k[1])*k[2]).toFixed(1)}px) scale(${(1+.08*Math.sin(t*9)).toFixed(3)})`;
+  // phone in, toward reader, scan, out
+  const pin=eo(prog(t,c[0]-.1,.8)),pmv=eio(prog(t,c[0]+1.1,1)),pout=eio(prog(t,c[1]-.6,.5));
+  st(ph,clamp(prog(t,c[0]-.1,.5))*(1-pout),lerp(200,0,pin)+lerp(0,-170,pmv)+pout*200,lerp(0,-40,pmv),lerp(1,.9,pmv),lerp(0,-8,pmv));
+  const bp=prog(t,scanT,.9);beam.style.opacity=(bp>0&&bp<1?1:0).toString();beam.style.top=(150+bp*330).toFixed(0)+'px';
+  up(ok,t,scanT+.6,{dy:30,ease:eob,out:c[1]-.6});
+  // pill on the photo
+  pill.textContent=t<c[1]-.2?'① Quét mã QR':t<c[2]-.4?'② Tự động bơm':'③ In biên lai';
+  pill.style.borderColor=t<c[1]-.2?'#38bdf8':t<c[2]-.4?'#4ade80':'#fbbf24';
+  up(pill,t,.8,{dy:-10});
+  // HMI
+  up(hmi,t,c[1]-.3,{dx:80,dy:0,out:c[2]-.5,ox:-60,oy:0});up(flow,t,c[1]+.1,{out:c[2]-.5});
+  const pp=eio(prog(t,P0,PD)),L=18.5*pp;
+  hlv.textContent=L.toFixed(3);hm.textContent=vn(Math.round(L*25660));
+  ht.textContent=vn(5200-L,1).replace(/,0$/,'')+' L';
+  fbar.style.width=(pp*100).toFixed(2)+'%';
+  if(t<P0){hs.textContent='● Đã nhận phiếu · chuẩn bị bơm';hs.style.color='#0d5bb5';fl1.textContent='Đang mở van…'}
+  else if(pp<1){hs.textContent='● Đang bơm…';hs.style.color='#d97706';fl1.textContent='Đang bơm theo phiếu…'}
+  else{hs.textContent='✓ Đủ 18,500 L · tự động ngắt bơm';hs.style.color='#16a34a';fl1.innerHTML='<span style="color:#4ade80">✓ Đủ số lít đã duyệt — tự động dừng</span>'}
+  // receipt + sync
+  up(slot,t,c[2]-.2,{dy:0,s0:.9});
+  rc.style.height=(eio(prog(t,c[2]+.2,1.8))*640).toFixed(0)+'px';
+  up(sync,t,c[2]+1.4,{dx:50,dy:0,ease:eob});up(sync2,t,c[2]+2.0,{dx:50,dy:0});
+ };
+})();
+
+// ===================== S5 hardware tour =====================
+const STOPS=[
+ {img:0,f:[934,1400],s:.5,rings:[],ic:'lock',t:'Tủ thép<br>sơn tĩnh điện',d:'Cụm bơm, điều khiển, màn hình và máy in tích hợp trong một tủ — có khóa an toàn.',tg:['Tủ thép','Có khóa']},
+ {img:0,f:[998,600],s:1.5,rings:[[998,560,180]],ic:'qr',t:'Đầu đọc<br>mã QR',d:'Tài xế đưa phiếu QR trên điện thoại vào đầu đọc — nhận phiếu chỉ trong tích tắc.',tg:['Quét nhanh','Không cần thẻ']},
+ {img:0,f:[938,1352],s:1.38,rings:[[938,1352,330]],ic:'screen',t:'Màn hình<br>cảm ứng',d:'Hiển thị số lít, thành tiền, đơn giá, tồn bồn và trạng thái kết nối máy chủ.',tg:['Số lít','Thành tiền','Tồn bồn']},
+ {img:0,f:[930,1700],s:1.85,rings:[[930,1690,175]],ic:'printer',t:'Máy in<br>biên lai nhiệt',d:'In biên lai cho từng lần bơm: biển số, số lít, đơn giá, thành tiền, thời gian.',tg:['In tại trụ']},
+ {img:0,f:[930,1790],s:2.3,rings:[[930,1830,80]],ic:'counter',t:'Bộ đếm<br>số cơ',d:'Đếm cơ học độc lập — đối chiếu với số liệu điện tử khi chốt ca.',tg:['Đối soát theo ca']},
+ {img:0,f:[1640,640],s:1.3,rings:[[1712,600,170]],ic:'antenna',t:'Ăng-ten<br>kết nối',d:'Giữ kết nối liên tục giữa trụ bơm và máy chủ — dữ liệu luôn được đồng bộ.',tg:['Online','Đồng bộ']},
+ {img:1,f:[600,820],s:.66,rings:[],ic:'chip',t:'Cụm bơm &amp;<br>bo điều khiển',d:'Bơm, lưu lượng kế và bo điều khiển bên trong; giao tiếp với bộ điều khiển trung tâm qua RS485.',tg:['Lưu lượng kế','RS485']}
+];
+(()=>{const s=$('s5'),c=C.s5;
+ const i1=add(s,'<img id="tourImg" src="assets/hero.jpg">');const i2=add(s,'<img id="tourImg2" src="assets/inside.jpg" style="opacity:0">');
+ add(s,'<div id="tourFade"></div>');
+ const rings=[add(s,'<div class="ring"></div>')];
+ const pins=[[448,512,'Bo điều khiển'],[336,900,'Mô-tơ bơm'],[800,700,'Cụm bơm · lưu lượng kế']].map(([x,y,tx])=>({x,y,el:add(s,`<div class="a pin"><i></i>${tx}</div>`)}));
+ const board=add(s,'<div class="a photo" style="left:860px;top:600px;width:250px;height:420px;border-radius:18px"><img src="assets/board.jpg" style="width:250px;margin-top:-90px"><div style="position:absolute;left:14px;top:190px;width:84px;height:84px;border:4px solid var(--amber);border-radius:14px;box-shadow:0 0 20px rgba(251,191,36,.8)"></div><div style="position:absolute;left:0;right:0;bottom:0;padding:12px;background:rgba(6,17,31,.9);font-size:22px;font-weight:800;text-align:center">Cổng RS485</div></div>');
+ const hdr=add(s,'<div class="a ov" style="left:60px;top:44px;padding:12px 22px;border-radius:999px;background:rgba(6,17,31,.85);border:1.5px solid rgba(56,189,248,.5)">Trụ bơm thông minh</div>');
+ const cards=STOPS.map((S,k)=>add(s,`<div class="a card tcard"><div class="idx">${String(k+1).padStart(2,'0')} / ${STOPS.length}</div><div class="ic">${icon(S.ic,50,'#38bdf8')}</div><div class="tt">${S.t}</div><div class="dd">${S.d}</div><div>${S.tg.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`));
+ const CX=600,CY=540;
+ UPD.s5=t=>{
+  up(hdr,t,.3,{dx:-30,dy:0});
+  let i=0;for(let k=1;k<STOPS.length;k++)if(t>=c[k]-.55)i=k;
+  const S=STOPS[i],P=STOPS[Math.max(0,i-1)];const t0=i?c[i]-.55:0;const p=i?eio(clamp((t-t0)/.9)):1;
+  const drift=1+.025*clamp((t-t0)/4);
+  if(S.img===0){const f=[lerp(P.f[0],S.f[0],p),lerp(P.f[1],S.f[1],p)],sc=lerp(i?P.s:.42,S.s,i?p:eo(clamp(t/2.2)))*drift;cam(i1,f[0],f[1],sc,CX,CY);i1.style.opacity=1;i2.style.opacity=0}
+  else{const a=clamp((t-t0)/.6);i1.style.opacity=(1-a).toFixed(3);i2.style.opacity=a.toFixed(3);cam(i2,S.f[0],S.f[1],S.s*drift,CX,CY)}
+  // ring
+  const R=S.rings[0];const ro=R?clamp((t-t0-.75)/.35):0;const r=rings[0];
+  if(R){const sc=(S.img?S.s:S.s)*drift;const x=CX+(R[0]-S.f[0])*sc,y=CY+(R[1]-S.f[1])*sc,rr=R[2]*sc;
+    r.style.left=(x-rr)+'px';r.style.top=(y-rr)+'px';r.style.width=r.style.height=2*rr+'px';r.style.opacity=(ro*(i<STOPS.length?1:0)).toFixed(3);
+    r.style.transform=`scale(${lerp(1.25,1,eob(clamp((t-t0-.75)/.5))).toFixed(3)})`}else r.style.opacity=0;
+  // pins + board on the last stop
+  const last=STOPS.length-1,tl=c[last]-.55;
+  pins.forEach((q,j)=>{const sc=STOPS[last].s*drift;const x=CX+(q.x-STOPS[last].f[0])*sc,y=CY+(q.y-STOPS[last].f[1])*sc;
+    up(q.el,t,tl+.9+j*.5,{dy:16,s0:.8,ease:eob});q.el.style.left=(x-14)+'px';q.el.style.top=(y-22)+'px'});
+  up(board,t,tl+2.6,{dy:40,s0:.9,ease:eob});
+  cards.forEach((e,k)=>up(e,t,k?c[k]-.25:.4,{dx:50,dy:0,out:k<last?c[k+1]-.6:1e9,ox:-40,oy:0,od:.3}));
+ };
+})();
+
+// ===================== S6 software =====================
+(()=>{const s=$('s6'),c=C.s6;
+ const pL=add(s,phone(['app_landing.jpg']));pL.style.left='120px';pL.style.top='170px';
+ const pR=add(s,phone(['app_tong_hop.jpg']));pR.style.left='560px';pR.style.top='170px';
+ const pC=add(s,phone(['app_home.jpg']));pC.style.left='340px';pC.style.top='130px';
+ const o=add(s,'<div class="a ov" style="left:1010px;top:110px">Phần mềm quản trị</div>');
+ const h=add(s,'<div class="a" style="left:1005px;top:155px;font-size:58px;font-weight:800;letter-spacing:-.02em;line-height:1.08">Quản lý trên <span class="grad">web &amp; điện thoại</span></div>');
+ const F=[['building','Nhiều công ty · chi nhánh','Dữ liệu tách riêng, phân quyền theo chi nhánh'],['gauge','Hạn mức theo kỳ','Theo từng xe & tài xế, xin tăng online'],
+  ['checkc','Phê duyệt đề nghị','Thông báo tức thì, duyệt ngay trên điện thoại'],['tank','Tồn bồn & đơn giá','Cập nhật theo thời gian thực'],
+  ['chart','Đối soát theo ca','Khớp số lít điện tử với số cơ'],['history','Lịch sử bơm','Tra cứu từng lần bơm theo xe, tài xế']];
+ const fs=F.map(([i,b,sp],k)=>add(s,`<div class="a card feat" style="left:${1005+(k%2)*425}px;top:${355+Math.floor(k/2)*200}px"><div class="fi">${icon(i,38,'#38bdf8')}</div><div><b>${b}</b><span>${sp}</span></div></div>`));
+ const at=[c[1],c[1]+.6,c[2],c[2]+.5,c[2]+1.0,c[2]+1.5];
+ UPD.s6=t=>{
+  up(pC,t,.1,{dy:80,s0:.92});up(pL,t,.5,{dx:80,dy:40,r:-7});up(pR,t,.7,{dx:-80,dy:40,r:7});
+up(o,t,c[0]-.2,{dx:-30,dy:0});up(h,t,c[0],{dy:40});
+  fs.forEach((e,k)=>up(e,t,at[k]-.1,{dy:40,s0:.92,ease:eob}));
+ };
+})();
+
+// ===================== S7 workshop =====================
+(()=>{const s=$('s7'),c=C.s7;
+ const o=add(s,'<div class="a center ov" style="top:80px">Năng lực sản xuất</div>');
+ const h=add(s,'<div class="a center" style="top:125px;font-size:64px;font-weight:800;letter-spacing:-.02em">Thiết kế · Chế tạo · Lắp đặt <span class="grad">trọn gói</span></div>');
+ const W=[['frame.jpg','01','Gia công vỏ tủ thép'],['assembly.jpg','02','Lắp cụm bơm & đấu nối'],['hero2.jpg','03','Hoàn thiện & vận hành']];
+ const ws=W.map(([im,n,tx],k)=>add(s,`<div class="a photo wk" style="left:${165+k*550}px;top:280px"><img src="assets/${im}"><div class="cap"><small>${n}</small>${tx}</div></div>`));
+ const wi=ws.map(w=>w.querySelector('img'));
+ UPD.s7=t=>{up(o,t,.2);up(h,t,.4,{dy:40});
+  ws.forEach((e,k)=>{up(e,t,c[0]+.3+k*1.3,{dy:70,s0:.92,ease:eob});wi[k].style.transform=`scale(${(1.12-.08*clamp((t-k)/7)).toFixed(4)})`});
+ };
+})();
+
+// ===================== S8 benefits + CTA =====================
+(()=>{const s=$('s8'),c=C.s8;
+ const bg=add(s,'<img class="a" src="assets/bg_blur.jpg" style="left:-40px;top:-30px;width:2000px;height:1140px;object-fit:cover">');
+ const P=[['shield','Chống thất thoát','Mỗi lít đều có phiếu & phê duyệt'],['eye','Minh bạch từng lít','Dữ liệu đồng bộ, đối soát theo ca'],['clock','Tiết kiệm thời gian','Không ghi sổ, không chờ ký giấy']];
+ const ps=P.map(([i,tt,sb],k)=>add(s,`<div class="a pillar" style="left:${190+k*530}px;top:330px"><div class="pi">${icon(i,64,'#38bdf8')}</div><div class="pt">${tt}</div><div class="ps">${sb}</div></div>`));
+ const lg=add(s,'<div class="a logo" style="left:854px;top:110px;padding:12px 14px"><img src="assets/logo_qa.png" style="height:220px"></div>');
+ const b=add(s,'<div class="a center" style="top:410px;font-size:96px;font-weight:900;letter-spacing:.04em">QUỐC ANH <span class="grad">GAS</span></div>');
+ const tg=add(s,'<div class="a center" style="top:540px;font-size:40px;font-weight:600;color:#cfe0f5">Hệ thống cấp phát nhiên liệu nội bộ thông minh</div>');
+ const cta=add(s,'<div class="a center" style="top:650px"><span style="display:inline-block;padding:22px 48px;border-radius:999px;background:linear-gradient(90deg,#0ea5e9,#22c55e);font-size:36px;font-weight:800;box-shadow:0 14px 40px rgba(14,165,233,.45)">Liên hệ ngay để được tư vấn</span></div>');
+ const ct=add(s,`<div class="a center" style="top:770px;font-size:36px;font-weight:700">${CONTACT}</div>`);
+ UPD.s8=t=>{st(bg,clamp(t/.8)*.9,0,0,1.02+.03*t/12);
+  ps.forEach((e,k)=>up(e,t,c[0]+k*1.15,{dy:60,s0:.85,ease:eob,out:c[1]-.5}));
+  up(lg,t,c[1]-.1,{dy:-30,s0:.7,ease:eob});up(b,t,c[1]+.3,{dy:40});up(tg,t,c[1]+.6,{dy:30});up(cta,t,c[1]+1.2,{dy:30,s0:.9,ease:eob});
+  if(CONTACT)up(ct,t,c[1]+1.6,{dy:20});
+ };
+})();
+
+// ===================== master render =====================
+const OVL=.5;
+window.render=function(t){
+  drawBg(t);
+  for(const [k,a,b] of SCENES){const el=$(k);
+    if(t<a||t>b){el.style.display='none';continue}
+    el.style.display='block';
+    const fi=k==='s1'?1:clamp((t-a)/OVL),fo=k==='s8'?1:clamp((b-t)/OVL);
+    el.style.opacity=Math.min(fi,fo).toFixed(3);UPD[k](t-a)}
+  drawRail(t);
+  const w0=TM.scenes.s2[0]+1,w1=TM.scenes.s8[0];
+  $('wm').style.opacity=(clamp((t-w0)/.6)*(1-clamp((t-w1)/.5))*(t>TM.scenes.s5[0]+.2&&t<TM.scenes.s5[1]-.3?0:1)).toFixed(3);
+  $('black').style.opacity=clamp((t-(TM.duration-.9))/.8).toFixed(3);
+};
+window.READY=true;
+</script>
+</body>
+</html>
