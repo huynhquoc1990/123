@@ -37,11 +37,11 @@ SCENES = {
         ('Mỗi lần bơm đều có phiếu mã QR, kiểm soát hạn mức và đối soát tự động.', 3.0)]),
     's3': (8.0, 0.5, [
         ('Quy trình chỉ gồm bốn bước.', 2.3),
-        ('Bước một: tài xế tạo đề nghị cấp phát trên điện thoại. Hệ thống tự kiểm tra hạn mức còn lại của từng xe.', 4.0),
-        ('Bước hai: người quản lý phê duyệt số lít ngay trên ứng dụng. Các đề nghị được tổng hợp theo biển số xe.', 4.0),
+        ('Bước một: tài xế tạo đề nghị cấp phát trên điện thoại. Hệ thống tự kiểm tra hạn mức còn lại của từng xe.', 8.4),
+        ('Bước hai: người quản lý phê duyệt số lít ngay trên ứng dụng. Các đề nghị được tổng hợp theo biển số xe.', 6.4),
         ('Bước ba: tài xế nhận phiếu mã QR, ghi rõ biển số, loại nhiên liệu, số lít và thời hạn hiệu lực.', 4.0)]),
     's4': (8.0, 0.5, [
-        ('Bước bốn: đưa mã QR vào đầu đọc trên trụ bơm.', 3.8),
+        ('Bước bốn: đưa mã QR vào đầu đọc trên trụ bơm. Trụ nhận phiếu, hiện biển số và số lít được cấp.', 6.2),
         ('Trụ tự động bơm đúng số lít đã duyệt, rồi dừng lại.', 6.2),
         ('Biên lai được in ngay tại trụ, dữ liệu đồng bộ về máy chủ theo thời gian thực.', 4.0)]),
     's5': (8.0, 0.6, [  # hardware tour: one line per stop (same order as STOPS in index.html)

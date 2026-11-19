@@ -11,31 +11,31 @@
    ],
    "s3": [
     19.729,
-    39.399
+    43.521
    ],
    "s4": [
-    38.899,
-    54.361
+    43.021,
+    60.883
    ],
    "s5": [
-    53.861,
-    82.835
+    60.383,
+    89.357
    ],
    "s5b": [
-    82.335,
-    97.284
+    88.857,
+    103.806
    ],
    "s6": [
-    96.784,
-    110.761
+    103.306,
+    117.283
    ],
    "s7": [
-    110.261,
-    117.761
+    116.783,
+    124.283
    ],
    "s8": [
-    117.261,
-    129.261
+    123.783,
+    135.783
    ]
   },
   "cues": {
@@ -51,13 +51,13 @@
    "s3": [
     0.5,
     2.8,
-    8.307,
-    13.478
+    11.2,
+    17.6
    ],
    "s4": [
     0.5,
-    4.3,
-    10.5
+    6.7,
+    12.9
    ],
    "s5": [
     0.6,
@@ -102,7 +102,7 @@
     4.992
    ],
    "s4": [
-    2.403,
+    5.027,
     2.543,
     3.762
    ],
@@ -132,7 +132,7 @@
     4.263
    ]
   },
-  "duration": 129.261
+  "duration": 135.783
  },
  "voice": [
   [
@@ -171,102 +171,102 @@
    "Bước một: tài xế tạo đề nghị cấp phát trên điện thoại. Hệ thống tự kiểm tra hạn mức còn lại của từng xe."
   ],
   [
-   28.04,
+   30.93,
    4.82,
    "Bước hai: người quản lý phê duyệt số lít ngay trên ứng dụng. Các đề nghị được tổng hợp theo biển số xe."
   ],
   [
-   33.21,
+   37.33,
    4.99,
    "Bước ba: tài xế nhận phiếu mã QR, ghi rõ biển số, loại nhiên liệu, số lít và thời hạn hiệu lực."
   ],
   [
-   39.4,
-   2.4,
-   "Bước bốn: đưa mã QR vào đầu đọc trên trụ bơm."
+   43.52,
+   5.03,
+   "Bước bốn: đưa mã QR vào đầu đọc trên trụ bơm. Trụ nhận phiếu, hiện biển số và số lít được cấp."
   ],
   [
-   43.2,
+   49.72,
    2.54,
    "Trụ tự động bơm đúng số lít đã duyệt, rồi dừng lại."
   ],
   [
-   49.4,
+   55.92,
    3.76,
    "Biên lai được in ngay tại trụ, dữ liệu đồng bộ về máy chủ theo thời gian thực."
   ],
   [
-   54.46,
+   60.98,
    4.09,
    "Trụ bơm thông minh được tích hợp trọn bộ trong tủ thép sơn tĩnh điện, có khóa an toàn."
   ],
   [
-   58.9,
+   65.42,
    2.53,
    "Đầu đọc mã QR nhận phiếu cấp phát chỉ trong tích tắc."
   ],
   [
-   61.9,
+   68.42,
    3.8,
    "Màn hình cảm ứng hiển thị số lít, thành tiền, đơn giá và tồn bồn."
   ],
   [
-   66.04,
+   72.57,
    1.88,
    "Máy in nhiệt in biên lai cho từng lần bơm."
   ],
   [
-   69.04,
+   75.57,
    2.82,
    "Bộ đếm số cơ, đối chiếu độc lập với số liệu điện tử."
   ],
   [
-   72.22,
+   78.74,
    2.02,
    "Ăng ten giữ kết nối liên tục với máy chủ."
   ],
   [
-   75.22,
+   81.74,
    6.42,
    "Bên trong là mô-tơ bơm Toshiba, bộ đo lường Tatsuno hoặc Shibata và bo điều khiển, giao tiếp qua cổng RS485."
   ],
   [
-   82.84,
+   89.36,
    8.75,
    "Thông số kỹ thuật: mô-tơ bơm Toshiba, bộ đo lường Tatsuno hoặc Shibata, lưu lượng từ 50 đến 70 lít mỗi phút, sai số chỉ ±0,3%."
   ],
   [
-   91.94,
+   98.46,
    4.14,
    "Kết nối 4G và Wi-Fi, toàn bộ dữ liệu được quản trị trên nền tảng đám mây."
   ],
   [
-   97.28,
+   103.81,
    3.05,
    "Hệ quản trị đám mây, truy cập mọi lúc trên máy tính và điện thoại."
   ],
   [
-   100.69,
+   107.21,
    4.31,
    "Quản lý nhiều công ty, nhiều chi nhánh. Đặt hạn mức theo kỳ cho từng xe và tài xế."
   ],
   [
-   105.35,
+   111.87,
    4.21,
    "Phê duyệt đề nghị, theo dõi tồn bồn, và đối soát số lít với số cơ theo từng ca."
   ],
   [
-   110.76,
+   117.28,
    4.93,
    "Từ khung tủ, lắp ráp cơ khí đến lập trình phần mềm, tất cả do Quốc Anh Gas thực hiện trọn gói."
   ],
   [
-   117.76,
+   124.28,
    3.52,
    "Chống thất thoát. Minh bạch từng lít dầu. Tiết kiệm thời gian cho đội xe."
   ],
   [
-   122.36,
+   128.88,
    4.26,
    "Quốc Anh Gas, hệ thống cấp phát nhiên liệu nội bộ thông minh. Liên hệ ngay để được tư vấn."
   ]

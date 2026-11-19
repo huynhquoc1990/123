@@ -192,6 +192,10 @@ target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx
 bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
 history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>'
 };
+// real footage: JPEG frame sequences made by prep_real.py (30 fps)
+const REAL={a:594,b:246,c:284},PENDING=[];
+function setSrc(img,src){if(img.dataset.s===src)return;img.dataset.s=src;img.src=src;PENDING.push(img.decode().catch(()=>{}))}
+function realFrame(img,seg,sec){const n=clamp(Math.floor(sec*30)+1,1,REAL[seg]);setSrc(img,`assets/real/${seg}_${String(n).padStart(4,'0')}.jpg`)}
 const icon=(n,sz=48,c='currentColor',w=1.8)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
 const phone=(imgs)=>`<div class="a phone"><div class="scr"><div class="notch"></div>${imgs.map(s=>`<img src="assets/${s}">`).join('')}</div></div>`;
 
@@ -280,38 +284,43 @@ function drawRail(t){const a=TM.scenes.s3[0],b=TM.scenes.s4[1];
 (()=>{const s=$('s3'),c=C.s3;
  const t1=add(s,'<div class="a center ov" style="top:380px;font-size:26px">Quy trình cấp phát</div>');
  const t2=add(s,'<div class="a center" style="top:430px;font-size:110px;font-weight:800;letter-spacing:-.03em">4 bước <span class="grad">khép kín</span></div>');
- const ph=add(s,phone(['app_home.jpg','app_tong_hop.jpg','app_qr.jpg']));ph.style.left='470px';ph.style.top='200px';
+ const ph=add(s,phone(['real/a_0001.jpg','app_qr.jpg']));ph.style.left='470px';ph.style.top='200px';
  const imgs=[...ph.querySelectorAll('img')];const scr=ph.querySelector('.scr');
  // highlight boxes as fractions of the screenshot [x0,y0,x1,y1]
  const HL=[[.035,.2,.965,.35],[.03,.165,.97,.51],[.17,.37,.83,.695]];
+ const live=add(scr,'<div style="position:absolute;left:18px;top:50px;z-index:5;padding:7px 14px;border-radius:999px;background:rgba(6,17,31,.85);color:#fff;font-size:17px;font-weight:700"></div>');
  const hls=HL.map(([x0,y0,x1,y1])=>add(scr,`<div class="hl" style="left:${x0*400}px;top:${y0*804}px;width:${(x1-x0)*400}px;height:${(y1-y0)*804}px"></div>`));
  const B=(i,x)=>`<div class="bul">${icon(i,40,'#38bdf8',2)}<span>${x}</span></div>`;
  const cards=[
-  add(s,`<div class="a step"><div class="n">BƯỚC 1 · TÀI XẾ</div><div class="t">Tạo đề nghị<br><span class="grad">cấp phát</span></div>${B('truck','Chọn xe, nhập số lít cần cấp')}${B('gauge','Hệ thống tự kiểm tra hạn mức còn lại')}${B('phone','Thiếu hạn mức? Xin tăng ngay trên app')}<div class="card kpi"><div class="l">Hạn mức tháng 11/2026 · 77H2-180.34</div><div class="v"><span style="color:var(--green)">44,81</span> <span class="muted" style="font-size:34px">/ 530 L còn lại</span></div></div></div>`),
+  add(s,`<div class="a step"><div class="n">BƯỚC 1 · TÀI XẾ</div><div class="t">Tạo đề nghị<br><span class="grad">cấp phát</span></div>${B('truck','Chọn xe, nhập số lít cần cấp')}${B('gauge','Hệ thống tự kiểm tra hạn mức còn lại')}${B('phone','Thiếu hạn mức? Xin tăng ngay trên app')}<div class="card kpi"><div class="l">Đề nghị vừa gửi · 77H3-123.45 · Công tác</div><div class="v"><span style="color:var(--green)">20,0</span> <span class="muted" style="font-size:34px">lít → chờ duyệt</span></div></div></div>`),
   add(s,`<div class="a step"><div class="n">BƯỚC 2 · QUẢN LÝ</div><div class="t">Phê duyệt<br><span class="grad">trên điện thoại</span></div>${B('checkc','Duyệt / từ chối chỉ với một chạm')}${B('truck','Tổng hợp đề nghị theo biển số xe')}${B('chart','Theo dõi lít đề nghị – lít duyệt – đã dùng')}</div>`),
   add(s,`<div class="a step"><div class="n">BƯỚC 3 · TÀI XẾ</div><div class="t">Nhận phiếu<br><span class="grad">mã QR</span></div><div class="tgrid"><div><small>Biển số</small><b>77H2-180.34</b></div><div><small>Nhiên liệu</small><b>DO 0,05S</b></div><div><small>Số lít</small><b style="color:var(--green)">18,5 L</b></div><div><small>Hiệu lực đến</small><b>30/11/2026</b></div></div>${B('qr','Trạng thái phiếu: chờ bơm · đã sử dụng · hết hạn')}</div>`)];
  UPD.s3=t=>{
   up(t1,t,c[0]-.2,{out:c[1]-.7});up(t2,t,c[0],{s0:.9,ease:eob,out:c[1]-.7});
   const pe=eo(prog(t,c[1]-.5,.9));st(ph,clamp(prog(t,c[1]-.5,.6)),lerp(-120,0,pe),lerp(80,0,pe),1,lerp(-6,0,pe));
-  imgs.forEach((im,i)=>{const a=i?clamp(prog(t,c[i+1]-.35,.5)):1;im.style.opacity=a.toFixed(3)});
-  // gentle scroll on the summary screenshot
-  imgs.forEach((im,i)=>{im.style.transform='translateY(0px)'});
-  hls.forEach((h,i)=>{const a=c[i+1]+1.1,b=i<2?c[i+2]-.4:1e9;const o=clamp(prog(t,a,.4))*(1-clamp(prog(t,b,.3)));h.style.opacity=o.toFixed(3);h.style.transform=`scale(${lerp(1.12,1,eob(prog(t,a,.5))).toFixed(3)})`});
+  // steps 1-2: the real recording (sped up), step 3: QR ticket screenshot
+  const A0=c[1]-.4,B0=c[2]-.35;
+  if(t<B0)realFrame(imgs[0],'a',Math.max(0,t-A0)*2.5);else realFrame(imgs[0],'b',(t-B0)*1.3);
+  imgs[1].style.opacity=clamp(prog(t,c[3]-.35,.5)).toFixed(3);
+  live.innerHTML=t<B0?'● QUAY THỰC TẾ · tua x2,5':'● QUAY THỰC TẾ · tua x1,3';
+  live.style.opacity=(1-clamp(prog(t,c[3]-.35,.3))).toFixed(3);
+  hls.forEach((h,i)=>{if(i<2){h.style.opacity=0;return}const a=c[i+1]+1.1,b=i<2?c[i+2]-.4:1e9;const o=clamp(prog(t,a,.4))*(1-clamp(prog(t,b,.3)));h.style.opacity=o.toFixed(3);h.style.transform=`scale(${lerp(1.12,1,eob(prog(t,a,.5))).toFixed(3)})`});
   cards.forEach((e,i)=>up(e,t,c[i+1]-.1,{dx:60,dy:0,out:i<2?c[i+2]-.45:1e9,oy:0,ox:-50}));
  };
 })();
 
 // ===================== S4 pump in action =====================
 (()=>{const s=$('s4'),c=C.s4;
- const card=add(s,'<div class="a photo" style="left:110px;top:200px;width:720px;height:830px"><img class="cam" src="assets/hero.jpg"><img class="cam" src="assets/print.jpg" style="opacity:0"></div>');
- const [ih,ip]=card.querySelectorAll('img');
+ const card=add(s,'<div class="a photo" style="left:110px;top:200px;width:720px;height:830px"><img class="cam" src="assets/hero.jpg"><img class="cam" src="assets/print.jpg" style="opacity:0"><img class="cam" src="assets/real/c_0001.jpg" style="top:-150px"></div>');
+ const [ih,ip,ir]=card.querySelectorAll('img');
+ const rt=add(s,`<div class="a step" style="left:930px;top:270px;width:860px"><div class="n">QUAY THỰC TẾ TẠI TRỤ</div><div class="t">Đưa mã QR<br><span class="grad">vào đầu đọc</span></div><div class="bul">${icon('qr',40,'#38bdf8',2)}<span>Đầu đọc nhận phiếu trong tích tắc</span></div><div class="bul">${icon('screen',40,'#38bdf8',2)}<span>Màn hình hiện biển số &amp; số lít được cấp</span></div><div class="bul">${icon('fuel',40,'#38bdf8',2)}<span>Bấm trên màn hình để bắt đầu bơm</span></div></div>`);
  const glow=add(card,'<div class="ring" style="width:260px;height:260px;border-color:#4ade80"></div>');
  const pill=add(card,'<div class="a" style="left:24px;top:24px;padding:10px 20px;border-radius:999px;background:rgba(6,17,31,.85);border:1.5px solid var(--cyan);font-size:22px;font-weight:700"></div>');
  // phase A: phone with QR ticket
  const ph=add(s,phone(['app_qr.jpg']));ph.style.left='1150px';ph.style.top='210px';
  const pim=ph.querySelector('img');pim.style.transform='translateY(-160px)';
  const beam=add(ph.querySelector('.scr'),'<div style="position:absolute;left:50px;width:300px;height:5px;background:#4ade80;box-shadow:0 0 18px 4px rgba(74,222,128,.8);opacity:0;z-index:4"></div>');
- const ok=add(s,`<div class="a card" style="left:1060px;top:880px;padding:20px 30px;display:flex;align-items:center;gap:18px;border-color:rgba(74,222,128,.6)">${icon('checkc',44,'#4ade80',2.2)}<div><div style="font-size:28px;font-weight:800">Đã nhận phiếu</div><div class="muted" style="font-size:21px">DON-2611181143-001 · 77H2-180.34 · 18,5 L</div></div></div>`);
+ const ok=add(s,`<div class="a card" style="left:1060px;top:880px;padding:20px 30px;display:flex;align-items:center;gap:18px;border-color:rgba(74,222,128,.6)">${icon('checkc',44,'#4ade80',2.2)}<div><div style="font-size:28px;font-weight:800">Đã nhận phiếu</div><div class="muted" style="font-size:21px">Trụ SHB-01 · Vòi 1 · 77H2-180.34</div></div></div>`);
  // phase B: HMI replica
  const hmi=add(s,`<div class="a" id="hmi"><div class="sc">
   <div class="hd"><span class="qa">QA</span>SHB-01 · Vòi 1 · DO_0.05S<span class="on"><i></i>Online &nbsp; 18:05:12</span></div>
@@ -345,19 +354,22 @@ function drawRail(t){const a=TM.scenes.s3[0],b=TM.scenes.s4[1];
  const P0=c[1]+.7,PD=4.6; // pumping start / duration
  UPD.s4=t=>{
   st(card,clamp(t/.6),lerp(-60,0,eo(clamp(t/1))));
-  const k=camAt([[0,960,1300,.38],[1.8,998,620,.95],[c[1]-.5,998,620,1.0],[c[1]+.5,938,1352,.78],[c[2]-.3,938,1352,.8]],t);
+  const k=camAt([[c[1]-.6,940,1250,.6],[c[1]+.5,938,1352,.78],[c[2]-.3,938,1352,.8]],t);
+  realFrame(ir,'c',t*1.4);ir.style.opacity=(1-clamp(prog(t,c[1]-.6,.5))).toFixed(3);
+  up(rt,t,c[0]-.1,{dx:60,dy:0,out:c[1]-.6,ox:-40,oy:0});
   cam(ih,k[0],k[1],k[2],360,415);
   const pc=clamp(prog(t,c[2]-.4,.6));ip.style.opacity=pc.toFixed(3);cam(ip,624,880,lerp(.78,.86,clamp((t-c[2])/4)),360,415);
   // reader glow when the ticket is scanned
-  const scanT=c[0]+2.1;const g=clamp(prog(t,scanT+.5,.25))*(1-clamp(prog(t,c[1]-.6,.4)));
+  const scanT=c[0]+3.2;const g=0;
   glow.style.opacity=g.toFixed(3);glow.style.transform=`translate(${(360-130+(998-k[0])*k[2]).toFixed(1)}px,${(415-130+(560-k[1])*k[2]).toFixed(1)}px) scale(${(1+.08*Math.sin(t*9)).toFixed(3)})`;
   // phone in, toward reader, scan, out
   const pin=eo(prog(t,c[0]-.1,.8)),pmv=eio(prog(t,c[0]+1.1,1)),pout=eio(prog(t,c[1]-.6,.5));
-  st(ph,clamp(prog(t,c[0]-.1,.5))*(1-pout),lerp(200,0,pin)+lerp(0,-170,pmv)+pout*200,lerp(0,-40,pmv),lerp(1,.9,pmv),lerp(0,-8,pmv));
+  st(ph,0*(1-pout),lerp(200,0,pin)+lerp(0,-170,pmv)+pout*200,lerp(0,-40,pmv),lerp(1,.9,pmv),lerp(0,-8,pmv));
   const bp=prog(t,scanT,.9);beam.style.opacity=(bp>0&&bp<1?1:0).toString();beam.style.top=(150+bp*330).toFixed(0)+'px';
-  up(ok,t,scanT+.6,{dy:30,ease:eob,out:c[1]-.6});
+  up(ok,t,scanT,{dy:30,ease:eob,out:c[1]-.6});
+  ok.style.left='930px';ok.style.top='800px';
   // pill on the photo
-  pill.textContent=t<c[1]-.2?'① Quét mã QR':t<c[2]-.4?'② Tự động bơm':'③ In biên lai';
+  pill.textContent=t<c[1]-.2?'① Quét mã QR · quay thực tế':t<c[2]-.4?'② Tự động bơm':'③ In biên lai';
   pill.style.borderColor=t<c[1]-.2?'#38bdf8':t<c[2]-.4?'#4ade80':'#fbbf24';
   up(pill,t,.8,{dy:-10});
   // HMI
@@ -496,6 +508,7 @@ window.render=function(t){
   const w0=TM.scenes.s2[0]+1,w1=TM.scenes.s8[0];
   $('wm').style.opacity=(clamp((t-w0)/.6)*(1-clamp((t-w1)/.5))*(t>TM.scenes.s5[0]+.2&&t<TM.scenes.s5[1]-.3?0:1)).toFixed(3);
   $('black').style.opacity=clamp((t-(TM.duration-.9))/.8).toFixed(3);
+  const p=PENDING.splice(0);return Promise.all(p);
 };
 window.READY=true;
 </script>
